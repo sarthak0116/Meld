@@ -1,13 +1,196 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>meld</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MELD // Game Match Making Website</title>
+  <!-- Google Fonts for premium tech styling -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&family=Share+Tech+Mono&family=Saira+Stencil+One&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+
+  <!-- Tech Grid Background System -->
+  <div class="grid-overlay">
+    <div class="grid-lines"></div>
+    <div class="dots-grid"></div>
+    
+    <!-- Crosshairs and Ticks from the reference image -->
+    <div class="crosshair ch-1">+</div>
+    <div class="crosshair ch-2">+</div>
+    <div class="crosshair ch-3">+</div>
+    <div class="crosshair ch-4">+</div>
+    
+    <div class="hud-tick tick-top-left"></div>
+    <div class="hud-tick tick-top-right"></div>
+    <div class="hud-tick tick-bottom-left"></div>
+    <div class="hud-tick tick-bottom-right"></div>
+    <!-- Jett's Swirling Wind and Floating Kunai Canvas -->
+    <canvas id="smoke-particles-canvas"></canvas>
+  </div>
+
+  <!-- Custom Cursor for premium interactivity -->
+  <div class="custom-cursor"></div>
+  <div class="custom-cursor-dot"></div>
+
+  <!-- Main Container -->
+  <main class="viewport-wrapper">
+    
+    <!-- Header Area -->
+    <header class="main-header">
+      <div class="logo-area">
+        <span class="logo-text">LOGO</span>
+      </div>
+      <nav class="nav-links">
+        <a href="#games" class="nav-item">GAMES <span class="plus-sign">+</span></a>
+        <a href="#about" class="nav-item">ABOUT US <span class="plus-sign">+</span></a>
+      </nav>
+      <div class="header-right">
+        <div class="lang-selector">
+          <a href="#register" class="lang-option">CREATE ACCOUNT</a>
+          <span class="lang-divider">/</span>
+          <a href="#login" class="lang-option active">LOGIN</a>
+        </div>
+        <button class="menu-toggle" aria-label="Menu">
+          <span class="menu-bar bar-1"></span>
+          <span class="menu-bar bar-2"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Left Layout -->
+    <aside class="sidebar-left">
+      <!-- Vertical Numbers List -->
+      <div class="vertical-nav-numbers">
+        <div class="nav-num">01</div>
+        <div class="nav-num">02</div>
+        <div class="nav-num active">03</div>
+        <div class="nav-num">04</div>
+        <div class="nav-num">05</div>
+        <div class="nav-num">06</div>
+      </div>
+
+      <!-- Large Vertical Text (Alien 13 equivalent) -->
+      <div class="vertical-title-container">
+        <span class="vertical-title-sub">VS</span>
+        <h1 class="vertical-title">MELD</h1>
+      </div>
+
+      <!-- Big Number (2077 equivalent) -->
+      <div class="large-year-badge">
+        <span class="year-number">VS</span>
+      </div>
+
+      <!-- Corner Crosshair Accent -->
+      <div class="sidebar-accent-cross">+</div>
+
+      <!-- QR Code Block -->
+      <!-- Lobby Status Clean -->
+      <div class="lobby-status-clean">
+        <h2 class="lobby-title-clean">CHALLENGE YOUR GAME</h2>
+        <div class="search-progress-bar-clean">
+          <div class="progress-bar-fill-clean"></div>
+        </div>
+      </div>
+
+      <!-- Social Links -->
+      <div class="social-links-footer">
+        <a href="#twitter" class="social-link">TWITTER</a>
+        <a href="#instagram" class="social-link">INSTAGRAMM</a>
+      </div>
+    </aside>
+
+    <!-- Center Stage: Franklin & Chop Animation / Video Area -->
+    <section class="center-stage-viewport">
+      
+      <!-- Video Scanlines Filter -->
+      <div class="crt-scanlines"></div>
+      
+      <!-- Vignette and Lighting Glare -->
+      <div class="cinematic-vignette"></div>
+      <div class="cinematic-glare"></div>
+
+      <!-- Main Visual Container -->
+      <div class="character-visual-container">
+        <!-- Floating/breathing characters card -->
+        <div class="character-card-parallax">
+          <canvas id="canvas-jett" class="character-layer layer-jett"></canvas>
+          <canvas id="canvas-shadow" class="character-layer layer-shadow"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Sidebar Right Layout -->
+    <aside class="sidebar-right">
+      
+      <!-- HUD Description Box -->
+      <article class="hud-description-box">
+        <div class="hud-desc-borders">
+          <span class="hud-border-line top"></span>
+          <span class="hud-border-line bottom"></span>
+          <span class="hud-border-corner top-left-bracket"></span>
+          <span class="hud-border-corner bottom-right-bracket"></span>
+        </div>
+        <div class="leaderboard-container">
+          <div class="leaderboard-header">
+            <span class="lbl-rank">RANK</span>
+            <span class="lbl-player">PLAYER</span>
+            <span class="lbl-points">SCORE</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="rank-num">01</span>
+            <span class="player-name">TENZ // DUEL</span>
+            <span class="player-pts">2,950 ELO</span>
+          </div>
+          <div class="leaderboard-row active">
+            <span class="rank-num">02</span>
+            <span class="player-name">JETT // MAIN</span>
+            <span class="player-pts">2,780 ELO</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="rank-num">03</span>
+            <span class="player-name">ASPAS // BEAST</span>
+            <span class="player-pts">2,610 ELO</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="rank-num">04</span>
+            <span class="player-name">SACY // CLUTCH</span>
+            <span class="player-pts">2,490 ELO</span>
+          </div>
+          <div class="leaderboard-row">
+            <span class="rank-num">05</span>
+            <span class="player-name">BOASTER // IML</span>
+            <span class="player-pts">2,320 ELO</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- Start Playing Button -->
+      <button class="start-playing-btn" id="start-playing-btn">
+        <span class="btn-borders">
+          <span class="corner tl"></span>
+          <span class="corner tr"></span>
+          <span class="corner bl"></span>
+          <span class="corner br"></span>
+        </span>
+        <span class="btn-text">START PLAYING</span>
+        <span class="btn-tick"></span>
+      </button>
+    </aside>
+
+    <!-- Scroll Indicator Area -->
+    <div class="scroll-indicator-container">
+      <span class="scroll-text">SCROLL</span>
+      <div class="scroll-line-wrapper">
+        <div class="scroll-anim-line"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="script.js?v=6"></script>
+</body>
 </html>
