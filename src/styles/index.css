@@ -1,6 +1,116 @@
 @import "tailwindcss";
 
+/* ── Custom fonts ── */
 @theme {
   --font-sans: "Exo 2", sans-serif;
   --font-tektur: "Tektur", sans-serif;
+}
+
+/* ── Base body ── */
+body {
+  background-color: #0a0a0f;
+  color: white;
+}
+
+/* Arena/Home pages override body bg via inline style — scrolling must be allowed */
+.arena-page, .home-page {
+  overflow-y: auto;
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #0a0a0f; }
+::-webkit-scrollbar-thumb { background: #6366f1; border-radius: 3px; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Grid background utility ── */
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ══════════════════════════════════════════
+   KEYFRAME ANIMATIONS
+   (Only things Tailwind cannot do natively)
+══════════════════════════════════════════ */
+
+/* Splash screen loading bar fill */
+@keyframes splash-fill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}
+
+/* Splash: one-shot bar that fills left to right then holds */
+@keyframes splashLoad {
+  0%   { width: 0%;    left: 0; }
+  80%  { width: 100%;  left: 0; }
+  100% { width: 100%;  left: 0; }
+}
+
+/* Floating ambient elements (hero, splash) */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-20px); }
+}
+
+/* Glow pulse for logo */
+@keyframes pulse-glow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.05); }
+}
+
+/* Page entrance fade */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── Arena: matchmaking scanning bar ── */
+@keyframes searchScan {
+  0%   { left: -100%; }
+  50%  { left: 100%; }
+  100% { left: 100%; }
+}
+
+/* ── Arena: scroll indicator drop ── */
+@keyframes scrollDown {
+  0%   { transform: translateY(-100%); }
+  70%  { transform: translateY(250%); }
+  100% { transform: translateY(250%); }
+}
+
+/* ── Arena: character slide-in from center ── */
+@keyframes slideFromCenter {
+  0%   { opacity: 0; transform: translate3d(40%, 0, 0) scale(0.95); }
+  100% { opacity: 1; transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes slideFromCenterMirror {
+  0%   { opacity: 0; transform: scaleX(-1) translate3d(40%, 0, 0) scale(0.95); }
+  100% { opacity: 0.95; transform: scaleX(-1) translate3d(0, 0, 0) scale(1); }
+}
+
+/* ── Arena: character breathing loop ── */
+@keyframes breathe {
+  0%, 100% { transform: scale(1) translate3d(0, 0, 0) rotate(0deg); }
+  50%       { transform: scale(1.015, 1.01) translate3d(2px, -4px, 0) rotate(0.4deg); }
+}
+@keyframes breatheMirror {
+  0%, 100% { transform: scaleX(-1) scale(1) translate3d(0, 0, 0) rotate(0deg); }
+  50%       { transform: scaleX(-1) scale(1.015, 1.01) translate3d(-2px, -4px, 0) rotate(-0.4deg); }
+}
+
+/* ── Animation utility classes ── */
+.animate-splash-fill      { animation: splash-fill 1.5s ease-in-out forwards; }
+.animate-float            { animation: float 3s ease-in-out infinite; }
+.animate-float-delay      { animation: float 3s ease-in-out 1s infinite; }
+.animate-float-delay-2    { animation: float 3s ease-in-out 2s infinite; }
+.animate-pulse-glow       { animation: pulse-glow 2s ease-in-out infinite; }
+.animate-fade-in          { animation: fade-in 0.5s ease-out forwards; }
+@media (hover: hover) and (pointer: fine) {
+  html, body, a, button {
+    cursor: none;
+  }
 }
