@@ -1,0 +1,18 @@
+export const MOCK_GAMES = [
+  { id: "g1", name: "VALORANT", genre: "TACTICAL FPS", platforms: ["PC"], playerCount: "12,400", tag: "HOT", coverColor: "#ff4655" },
+  { id: "g2", name: "CS2", genre: "FPS", platforms: ["PC"], playerCount: "8,200", tag: "LIVE", coverColor: "#f4a900" },
+  { id: "g3", name: "LOL", genre: "MOBA", platforms: ["PC"], playerCount: "9,800", tag: "HOT", coverColor: "#0ac8b9" },
+  { id: "g4", name: "APEX", genre: "BATTLE ROYALE", platforms: ["PC", "PS5", "Xbox"], playerCount: "7,100", tag: null, coverColor: "#c13b3e" },
+  { id: "g5", name: "DOTA 2", genre: "MOBA", platforms: ["PC"], playerCount: "6,300", tag: null, coverColor: "#d53a25" },
+  { id: "g6", name: "R6 SIEGE", genre: "TACTICAL FPS", platforms: ["PC", "PS5", "Xbox"], playerCount: "3,800", tag: "NEW", coverColor: "#ffffff" },
+  { id: "g7", name: "OVERWATCH 2", genre: "HERO SHOOTER", platforms: ["PC", "PS5", "Xbox", "Switch"], playerCount: "4,900", tag: null, coverColor: "#f99e1a" },
+  { id: "g8", name: "ROCKET LG", genre: "SPORTS", platforms: ["PC", "PS5", "Xbox", "Switch"], playerCount: "5,600", tag: null, coverColor: "#0072ff" },
+  { id: "g9", name: "FORTNITE", genre: "BATTLE ROYALE", platforms: ["PC", "PS5", "Xbox", "Switch", "Mobile"], playerCount: "15,200", tag: "LIVE", coverColor: "#00ffff" },
+  { id: "g10", name: "MINECRAFT", genre: "SANDBOX", platforms: ["PC", "PS5", "Xbox", "Switch", "Mobile"], playerCount: "22,000", tag: null, coverColor: "#5b8731" },
+  { id: "g11", name: "ROBLOX", genre: "SANDBOX", platforms: ["PC", "Xbox", "Mobile"], playerCount: "18,500", tag: null, coverColor: "#bb2222" },
+  { id: "g12", name: "GTA V", genre: "ACTION", platforms: ["PC", "PS5", "Xbox"], playerCount: "11,000", tag: "HOT", coverColor: "#54b848" },
+  { id: "g13", name: "GENSHIN IMPACT", genre: "RPG", platforms: ["PC", "PS5", "Mobile"], playerCount: "9,500", tag: "LIVE", coverColor: "#f4d886" },
+  { id: "g14", name: "RUST", genre: "SURVIVAL", platforms: ["PC", "PS5", "Xbox"], playerCount: "4,200", tag: null, coverColor: "#ce422b" },
+  { id: "g15", name: "DEAD BY DAYLIGHT", genre: "SURVIVAL", platforms: ["PC", "PS5", "Xbox", "Switch"], playerCount: "3,100", tag: null, coverColor: "#8e928f" },
+  { id: "g16", name: "WARFRAME", genre: "ACTION RPG", platforms: ["PC", "PS5", "Xbox", "Switch"], playerCount: "2,800", tag: null, coverColor: "#b2b8c5" },
+];

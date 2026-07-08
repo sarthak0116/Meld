@@ -71,12 +71,17 @@ export default function ArenaHeader() {
         <div className="font-['Orbitron'] font-black text-xl tracking-[2px] text-[#0b0c0b]">MELD</div>
 
         <nav className="hidden gap-10 md:flex">
-          {NAV_ITEMS.map((item) => (
-            <a key={item} href="#" className="group relative font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b] no-underline">
-              {item} <span className="text-[#e53e3e] text-[11px]">+</span>
-              <span className="absolute bottom-0 left-0 h-px w-0 bg-[#0b0c0b] transition-all duration-200 group-hover:w-full" />
-            </a>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const isGames = item === "GAMES";
+            const Comp = isGames ? Link : "a";
+            const props = isGames ? { to: "/games" } : { href: "#" };
+            return (
+              <Comp key={item} {...props} className="group relative font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b] no-underline">
+                {item} <span className="text-[#e53e3e] text-[11px]">+</span>
+                <span className="absolute bottom-0 left-0 h-px w-0 bg-[#0b0c0b] transition-all duration-200 group-hover:w-full" />
+              </Comp>
+            );
+          })}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -115,11 +120,16 @@ export default function ArenaHeader() {
         }`}
       >
         <div className="flex flex-col gap-1 px-4 py-4">
-          {NAV_ITEMS.map(item => (
-            <a key={item} href="#" onClick={() => setMenuOpen(false)} className="font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b]/70 py-2 no-underline hover:text-[#0b0c0b]">
-              {item} <span className="text-[#e53e3e]">+</span>
-            </a>
-          ))}
+          {NAV_ITEMS.map(item => {
+            const isGames = item === "GAMES";
+            const Comp = isGames ? Link : "a";
+            const props = isGames ? { to: "/games" } : { href: "#" };
+            return (
+              <Comp key={item} {...props} onClick={() => setMenuOpen(false)} className="font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b]/70 py-2 no-underline hover:text-[#0b0c0b]">
+                {item} <span className="text-[#e53e3e]">+</span>
+              </Comp>
+            );
+          })}
           <div className="mt-2 flex flex-col gap-2 border-t border-[#0b0c0b]/10 pt-3">
             {isLoggedIn ? (
               <>
