@@ -628,7 +628,7 @@ export default function HomePage() {
         fontSize: 14,
       }}
     >
-      <HudBackground />
+      <HudBackground light={true} />
 
       {/* Splash — only shown on first load of this page, unmounts when phase is "done" */}
       {phase !== "done" && (

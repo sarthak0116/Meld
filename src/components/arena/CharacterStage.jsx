@@ -284,6 +284,16 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
     alert(`Friend request sent to ${name}!`);
   };
 
+  const handleCopyInviteLink = () => {
+    const inviteUrl = `${window.location.origin}/join-lobby?code=${lobbyCode}`;
+    navigator.clipboard.writeText(inviteUrl);
+    alert("Invite link copied to clipboard!");
+  };
+
+  const handleBrowseOpenLobbies = () => {
+    alert("Mock Open Lobbies:\n1. VALORANT - Code: LBY-4291 (4/5 players)\n2. CS2 - Code: LBY-8201 (2/5 players)\n3. APEX - Code: LBY-1033 (1/3 players)");
+  };
+
   const handleSendFriendMessage = (e) => {
     e.preventDefault();
     if (!newMessage.trim() || !activeFriend) return;
@@ -920,14 +930,25 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
           <div className={`flex justify-between items-center border-b ${borderColor} pb-4 mb-4`}>
             <div>
               <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#fb923c]">
-                ACTIVE MATCHMAKING LOBBY
+                CUSTOM LOBBY
               </p>
-              <h2 className={`mt-1 text-2xl font-black uppercase tracking-tight ${textColor} font-['Orbitron']`}>
-                Room // {lobbyGame}
-              </h2>
+              <div className="flex items-center gap-3 mt-1">
+                <h2 className={`text-2xl font-black uppercase tracking-tight ${textColor} font-['Orbitron']`}>
+                  Room // {lobbyGame}
+                </h2>
+                <span className={`text-xs font-mono font-bold bg-[#fb923c]/15 text-[#fb923c] px-3 py-1 rounded border border-[#fb923c]/30 uppercase`}>
+                  Room Code: {lobbyCode}
+                </span>
+              </div>
             </div>
             
             <div className="flex gap-2">
+              <button
+                onClick={handleCopyInviteLink}
+                className="bg-[#fb923c] hover:bg-[#fb923c]/90 text-black px-5 py-2 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all shadow-[0_0_15px_rgba(251,146,60,0.2)]"
+              >
+                Copy Invite Link
+              </button>
               <button
                 onClick={() => setShowInviteCard(!showInviteCard)}
                 className="bg-transparent hover:bg-[#fb923c]/15 text-[#fb923c] border border-[#fb923c]/40 px-5 py-2 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all"
@@ -1244,7 +1265,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. LBY-9281"
+                  placeholder="Enter Code or Paste Link"
                   value={lobbyCode}
                   onChange={(e) => setLobbyCode(e.target.value)}
                   className={`w-full ${isDark ? "bg-[#121620] text-[#e6e8eb] placeholder:text-[#cbd4cc]/30" : "bg-white text-[#0b0c0b] placeholder:text-black/55"} border ${borderFilter} rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#fb923c] transition-all font-mono uppercase`}
@@ -1256,6 +1277,14 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 className="w-full bg-[#e53e3e] text-white hover:bg-[#c53030] py-3 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all"
               >
                 Join Custom Room
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleBrowseOpenLobbies}
+                className="w-full bg-transparent border border-[#fb923c]/40 text-[#fb923c] hover:bg-[#fb923c]/10 py-3 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all mt-2 cursor-pointer"
+              >
+                Browse Open Lobbies
               </button>
             </form>
             
