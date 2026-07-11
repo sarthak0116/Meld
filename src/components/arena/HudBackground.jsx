@@ -3,14 +3,28 @@ import useParticleCanvas from "../../hooks/useParticleCanvas";
 
 /**
  * Full-screen background layer:
- *   - Grid lines + dot matrix
+ *   - Grid lines + dot matrix (adaptive theme)
  *   - Crosshair (+) markers
  *   - HUD corner ticks
  *   - Particle canvas (wind trails, sparks, kunais)
  */
-export default function HudBackground() {
+export default function HudBackground({ light = false }) {
   const canvasRef = useRef(null);
   useParticleCanvas(canvasRef);
+
+  // Theme colors
+  const gridLineColor = light 
+    ? "rgba(11, 12, 11, 0.05)" 
+    : "rgba(203, 212, 204, 0.03)";
+  const dotMatrixColor = light 
+    ? "rgba(11, 12, 11, 0.15)" 
+    : "rgba(203, 212, 204, 0.12)";
+  const crosshairTextColor = light 
+    ? "text-[#0b0c0b]/35" 
+    : "text-[#cbd4cc]/20";
+  const cornerTickColor = light 
+    ? "border-[#0b0c0b]/20" 
+    : "border-[#cbd4cc]/15";
 
   return (
     <div className="pointer-events-none absolute inset-0 z-[1] overflow-hidden">
@@ -18,8 +32,7 @@ export default function HudBackground() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage:
-            "linear-gradient(to right, rgba(11,12,11,0.1) 1px, transparent 1px), linear-gradient(to bottom, rgba(11,12,11,0.1) 1px, transparent 1px)",
+          backgroundImage: `linear-gradient(to right, ${gridLineColor} 1px, transparent 1px), linear-gradient(to bottom, ${gridLineColor} 1px, transparent 1px)`,
           backgroundSize: "80px 80px",
         }}
       />
@@ -27,10 +40,33 @@ export default function HudBackground() {
       <div
         className="absolute inset-0"
         style={{
-          backgroundImage:
-            "radial-gradient(circle, rgba(11,12,11,0.15) 1px, transparent 1.5px)",
+          backgroundImage: `radial-gradient(circle, ${dotMatrixColor} 1.5px, transparent 1.5px)`,
           backgroundSize: "40px 40px",
         }}
+      />
+
+      {/* Radar Red Dots & Neon Glowing Symbols from Theme */}
+      <div
+        className="absolute h-3 w-3 rounded-full bg-red-500/80 shadow-[0_0_10px_#f87171] animate-ping"
+        style={{ top: "12%", left: "68%" }}
+      />
+      <div
+        className="absolute h-2 w-2 rounded-full bg-red-500/60 shadow-[0_0_8px_#f87171]"
+        style={{ top: "12%", left: "68%", transform: "translate(2px, 2px)" }}
+      />
+      <div
+        className="absolute h-1.5 w-1.5 rounded-full bg-red-400/50"
+        style={{ top: "16%", left: "77%" }}
+      />
+      <div
+        className="absolute h-2 w-2 rounded-full bg-red-500/60 shadow-[0_0_8px_#f87171]"
+        style={{ top: "58%", left: "25%" }}
+      />
+      
+      {/* Neon cursor line/symbol */}
+      <div
+        className="absolute h-[3px] w-[24px] bg-red-400/90 rotate-[-30deg] shadow-[0_0_12px_rgba(239,68,68,0.8)] rounded-full animate-pulse"
+        style={{ top: "72%", left: "32%" }}
       />
 
       {/* Crosshair markers */}
@@ -42,7 +78,7 @@ export default function HudBackground() {
       ].map((pos, i) => (
         <span
           key={i}
-          className="absolute font-mono text-base text-[#0b0c0b]/40 -translate-x-1/2 -translate-y-1/2"
+          className={`absolute font-mono text-base ${crosshairTextColor} -translate-x-1/2 -translate-y-1/2`}
           style={pos}
         >
           +
@@ -50,10 +86,10 @@ export default function HudBackground() {
       ))}
 
       {/* Corner HUD ticks */}
-      <span className="absolute top-5 left-5 h-4 w-4 border-l border-t border-[#0b0c0b]/25" />
-      <span className="absolute top-5 right-5 h-4 w-4 border-r border-t border-[#0b0c0b]/25" />
-      <span className="absolute bottom-5 left-5 h-4 w-4 border-l border-b border-[#0b0c0b]/25" />
-      <span className="absolute bottom-5 right-5 h-4 w-4 border-r border-b border-[#0b0c0b]/25" />
+      <span className={`absolute top-5 left-5 h-4 w-4 border-l border-t ${cornerTickColor}`} />
+      <span className={`absolute top-5 right-5 h-4 w-4 border-r border-t ${cornerTickColor}`} />
+      <span className={`absolute bottom-5 left-5 h-4 w-4 border-l border-b ${cornerTickColor}`} />
+      <span className={`absolute bottom-5 right-5 h-4 w-4 border-r border-b ${cornerTickColor}`} />
 
       {/* Particle canvas — behind characters (z-[2]), above grid (z-[1]) */}
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" style={{ zIndex: 2 }} />

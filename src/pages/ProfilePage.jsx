@@ -121,7 +121,7 @@ export default function ProfilePage() {
       className="relative min-h-screen"
       style={{ background: "#cbd4cc", color: "#0b0c0b", fontFamily: "'Share Tech Mono', monospace" }}
     >
-      <HudBackground />
+      <HudBackground light={true} />
 
       {/* Header */}
       <div className="relative z-10 flex items-center justify-between border-b border-[#0b0c0b]/20 px-5 sm:px-[60px] py-4">
