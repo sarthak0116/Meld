@@ -5,6 +5,7 @@ import LoginPage   from "./pages/LoginPage";
 import SignupPage  from "./pages/SignupPage";
 import ArenaPage   from "./pages/ArenaPage";
 import ProfilePage from "./pages/ProfilePage";
+import GamesPage from "./pages/GamesPage";
 
 /** Redirects unauthenticated users to /login */
 function ProtectedRoute({ children }) {
@@ -27,6 +28,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
+        <Route path="/games" element={<GamesPage />} />
         <Route path="/login"  element={<GuestRoute><LoginPage /></GuestRoute>} />
         <Route path="/signup" element={<GuestRoute><SignupPage /></GuestRoute>} />
         <Route path="/arena"  element={<ProtectedRoute><ArenaPage /></ProtectedRoute>} />
