@@ -2,7 +2,8 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 
-const NAV_ITEMS = ["GAMES", "ABOUT US"];
+const NAV_ITEMS = ["GAMES", "LOBBIES", "ABOUT US"];
+const NAV_ROUTES = { GAMES: "/games", LOBBIES: "/lobbies" };
 
 function UserDropdown({ username, onProfile, onLogout }) {
   const [open, setOpen] = useState(false);
@@ -72,9 +73,9 @@ export default function ArenaHeader() {
 
         <nav className="hidden gap-10 md:flex">
           {NAV_ITEMS.map((item) => {
-            const isGames = item === "GAMES";
-            const Comp = isGames ? Link : "a";
-            const props = isGames ? { to: "/games" } : { href: "#" };
+            const to = NAV_ROUTES[item];
+            const Comp = to ? Link : "a";
+            const props = to ? { to } : { href: "#" };
             return (
               <Comp key={item} {...props} className="group relative font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b] no-underline">
                 {item} <span className="text-[#e53e3e] text-[11px]">+</span>
@@ -121,9 +122,9 @@ export default function ArenaHeader() {
       >
         <div className="flex flex-col gap-1 px-4 py-4">
           {NAV_ITEMS.map(item => {
-            const isGames = item === "GAMES";
-            const Comp = isGames ? Link : "a";
-            const props = isGames ? { to: "/games" } : { href: "#" };
+            const to = NAV_ROUTES[item];
+            const Comp = to ? Link : "a";
+            const props = to ? { to } : { href: "#" };
             return (
               <Comp key={item} {...props} onClick={() => setMenuOpen(false)} className="font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b]/70 py-2 no-underline hover:text-[#0b0c0b]">
                 {item} <span className="text-[#e53e3e]">+</span>

@@ -6,6 +6,7 @@ import SignupPage  from "./pages/SignupPage";
 import ArenaPage   from "./pages/ArenaPage";
 import ProfilePage from "./pages/ProfilePage";
 import GamesPage from "./pages/GamesPage";
+import BrowseLobbiesPage from "./pages/BrowseLobbiesPage";
 
 /** Redirects unauthenticated users to /login */
 function ProtectedRoute({ children }) {
@@ -33,6 +34,7 @@ export default function App() {
         <Route path="/signup" element={<GuestRoute><SignupPage /></GuestRoute>} />
         <Route path="/arena"  element={<ProtectedRoute><ArenaPage /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+        <Route path="/lobbies" element={<ProtectedRoute><BrowseLobbiesPage /></ProtectedRoute>} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>

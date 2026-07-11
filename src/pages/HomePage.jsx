@@ -513,7 +513,8 @@ function HomeHeader({ navLogoRef, logoVisible }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { isLoggedIn, user, logout } = useAuth();
   const navigate = useNavigate();
-  const NAV_ITEMS = ["GAMES", "ABOUT US"];
+  const NAV_ITEMS = ["GAMES", "LOBBIES", "ABOUT US"];
+  const NAV_ROUTES = { GAMES: "/games", LOBBIES: "/lobbies" };
 
   const handleLogout = () => { logout(); setMenuOpen(false); };
   const handleProfile = () => { navigate("/profile"); setMenuOpen(false); };
@@ -533,9 +534,9 @@ function HomeHeader({ navLogoRef, logoVisible }) {
 
         <nav className="hidden md:flex gap-10">
           {NAV_ITEMS.map((item) => {
-            const isGames = item === "GAMES";
-            const Comp = isGames ? Link : "a";
-            const props = isGames ? { to: "/games" } : { href: "#" };
+            const to = NAV_ROUTES[item];
+            const Comp = to ? Link : "a";
+            const props = to ? { to } : { href: "#" };
             return (
               <Comp key={item} {...props} className="group relative font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b] no-underline">
                 {item} <span className="text-[#e53e3e] text-[11px]">+</span>
@@ -575,9 +576,9 @@ function HomeHeader({ navLogoRef, logoVisible }) {
       >
         <div className="flex flex-col gap-1 px-4 py-4">
           {NAV_ITEMS.map(item => {
-            const isGames = item === "GAMES";
-            const Comp = isGames ? Link : "a";
-            const props = isGames ? { to: "/games" } : { href: "#" };
+            const to = NAV_ROUTES[item];
+            const Comp = to ? Link : "a";
+            const props = to ? { to } : { href: "#" };
             return (
               <Comp key={item} {...props} onClick={() => setMenuOpen(false)}
                 className="font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b]/70 py-2 no-underline hover:text-[#0b0c0b]">
