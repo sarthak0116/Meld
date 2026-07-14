@@ -68,6 +68,11 @@ body {
   to   { opacity: 1; }
 }
 
+@keyframes sidebarIn {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(0); }
+}
+
 /* ── Arena: matchmaking scanning bar ── */
 @keyframes searchScan {
   0%   { left: -100%; }
@@ -109,6 +114,25 @@ body {
 .animate-float-delay-2    { animation: float 3s ease-in-out 2s infinite; }
 .animate-pulse-glow       { animation: pulse-glow 2s ease-in-out infinite; }
 .animate-fade-in          { animation: fade-in 0.5s ease-out forwards; }
+@keyframes dropdownOpen {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-dropdown-open {
+  animation: dropdownOpen 180ms ease-out forwards;
+}
+
+@keyframes profileSlideDown {
+  0%   { opacity: 0; transform: translateY(-24px) scale(0.98); }
+  60%  { opacity: 1; transform: translateY(4px) scale(1.01); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.animate-profile-open,
+.animate-panel-open {
+  animation: profileSlideDown 260ms cubic-bezier(.25,.8,.35,1) forwards;
+}
 @media (hover: hover) and (pointer: fine) {
   html, body, a, button {
     cursor: none;

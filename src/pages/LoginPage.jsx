@@ -107,7 +107,7 @@ export default function LoginPage() {
       className="relative min-h-screen flex items-center justify-center"
       style={{ background: "#cbd4cc", color: "#0b0c0b", fontFamily: "'Share Tech Mono', monospace" }}
     >
-      <HudBackground />
+      <HudBackground light={true} />
 
       {/* Back to home — top left */}
       <div className="absolute top-6 left-4 sm:left-[60px] z-20">
@@ -171,7 +171,7 @@ export default function LoginPage() {
               autoComplete="current-password"
               error={errors.password}
               suffix={
-                <button type="button" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password">
+                <button type="button" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password" className="bg-transparent border-none text-[#cbd4cc]/40 hover:text-white cursor-pointer">
                   {showPassword ? <EyeOpen /> : <EyeClosed />}
                 </button>
               }
@@ -215,7 +215,7 @@ export default function LoginPage() {
                 key={s.label}
                 type="button"
                 onClick={() => { setSocialToast(`${s.label} login coming soon`); setTimeout(() => setSocialToast(""), 2500); }}
-                className="border border-[#0b0c0b]/20 py-2.5 font-['Orbitron'] text-[10px] font-black tracking-[2px] uppercase transition-colors hover:border-[#0b0c0b]/50 cursor-pointer"
+                className="border border-[#0b0c0b]/20 py-2.5 font-['Orbitron'] text-[10px] font-black tracking-[2px] uppercase transition-colors hover:border-[#0b0c0b]/50 cursor-pointer bg-transparent"
                 style={{ borderRadius: 0, color: s.color }}
               >
                 {s.label}
