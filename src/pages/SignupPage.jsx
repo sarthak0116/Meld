@@ -203,7 +203,7 @@ export default function SignupPage() {
                 autoComplete="new-password"
                 error={errors.password}
                 suffix={
-                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password" className="bg-transparent border-none text-[#cbd4cc]/40 hover:text-white cursor-pointer">
+                  <button type="button" onClick={() => setShowPassword(v => !v)} aria-label="Toggle password" className="bg-transparent border-none text-[#0b0c0b]/40 hover:text-[#0b0c0b] cursor-pointer">
                     {showPassword ? <EyeOpen /> : <EyeClosed />}
                   </button>
                 }
@@ -238,7 +238,7 @@ export default function SignupPage() {
               autoComplete="new-password"
               error={errors.confirmPassword}
               suffix={
-                <button type="button" onClick={() => setShowConfirm(v => !v)} aria-label="Toggle confirm password" className="bg-transparent border-none text-[#cbd4cc]/40 hover:text-white cursor-pointer">
+                <button type="button" onClick={() => setShowConfirm(v => !v)} aria-label="Toggle confirm password" className="bg-transparent border-none text-[#0b0c0b]/40 hover:text-[#0b0c0b] cursor-pointer">
                   {showConfirm ? <EyeOpen /> : <EyeClosed />}
                 </button>
               }

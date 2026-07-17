@@ -425,7 +425,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
         <div className={`flex items-center justify-between border-b ${borderColor} pb-4 mb-4 px-2`}>
           <div className="flex items-end gap-6">
             <div>
-              <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#fb923c]">
+              <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#e53e3e]">
                 PLAYER STATS OVERVIEW
               </p>
               <h2 className={`mt-1 text-2xl font-black uppercase tracking-tight ${textColor} font-['Orbitron']`}>
@@ -438,7 +438,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
               <select
                 value={timeFilter}
                 onChange={(e) => setTimeFilter(e.target.value)}
-                className={`${bgSelect} border ${borderFilter} px-3 py-1.5 text-xs focus:outline-none focus:border-[#fb923c] rounded-xl font-bold uppercase tracking-wider`}
+                className={`${bgSelect} border ${borderFilter} px-3 py-1.5 text-xs focus:outline-none focus:border-[#e53e3e]  font-bold uppercase tracking-wider`}
               >
                 <option value="overall">Overall</option>
                 <option value="last_match">Last Match</option>
@@ -470,7 +470,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   
                   {/* Game Title */}
                   <div className="col-span-2 flex items-center gap-3">
-                    <div className="h-2 w-2 rounded-full bg-[#fb923c]" />
+                    <div className="h-2 w-2 rounded-full bg-[#e53e3e]" />
                     <span className={`font-['Orbitron'] text-xs font-bold uppercase tracking-wider ${textColor}`}>
                       {game.name}
                     </span>
@@ -535,22 +535,28 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 <button
                   key={friend.id}
                   onClick={() => setActiveFriendId(friend.id)}
-                  className={`w-full text-left px-5 py-4 flex items-center justify-between transition-colors ${
+                  className={`w-full text-left px-5 py-3.5 flex items-center justify-between transition-colors ${
                     isDark ? "hover:bg-[#ffffff]/5" : "hover:bg-[#0b0c0b]/5"
                   } ${
-                    activeFriendId === friend.id ? (isDark ? "bg-[#ffffff]/5 border-l-2 border-[#fb923c]" : "bg-[#0b0c0b]/5 border-l-2 border-[#fb923c]") : ""
+                    activeFriendId === friend.id ? (isDark ? "bg-[#ffffff]/5 border-l-2 border-[#e53e3e]" : "bg-[#0b0c0b]/5 border-l-2 border-[#e53e3e]") : ""
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-[#1b2230] border border-[#fb923c]/25 text-[10px] font-black text-[#fb923c]">
+                    <div className={`relative flex h-7 w-7 items-center justify-center border text-[9px] font-black ${
+                      isDark ? "border-[#ffffff]/15 text-[#cbd4cc]/70" : "border-[#0b0c0b]/25 text-[#0b0c0b]/70"
+                    }`}>
                       {friend.initial}
+                      <span className={`absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full ${
+                        friend.status === "Online" ? "bg-[#22c55e]" :
+                        friend.status === "In-Game" ? "bg-[#a370f7]" :
+                        friend.status === "Away" ? "bg-[#f0b232]" : "bg-[#80848e]"
+                      }`} />
                     </div>
                     <div className="flex flex-col">
-                      <span className={`font-['Orbitron'] text-xs font-bold ${textColor}`}>{friend.name}</span>
+                      <span className={`font-['Orbitron'] text-[11px] font-black ${textColor}`}>{friend.name}</span>
                       <span className={`text-[9px] uppercase tracking-wider ${textMuted}`}>{friend.status}</span>
                     </div>
                   </div>
-                  <StatusIcon status={friend.status} sizeClass="h-2.5 w-2.5" />
                 </button>
               ))}
             </div>
@@ -559,23 +565,26 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
           {/* Right Side: Chat View Area */}
           <div className={`flex-1 flex flex-col h-full ${isDark ? "bg-[#0a0c10]/80" : "bg-[#ffffff]/80"} backdrop-blur-md`}>
             
-            {/* Top Row: Online Friends Status bar */}
-            <div className={`px-6 py-4 border-b ${borderColor} ${isDark ? "bg-[#ffffff]/5" : "bg-[#0b0c0b]/5"} flex flex-col gap-2`}>
-              <span className="text-[9px] font-black uppercase tracking-[2px] text-[#fb923c]/70">Online Status</span>
-              <div className="flex items-center gap-3">
+            {/* Top Row: Online strip */}
+            <div className={`px-6 py-3 border-b ${borderColor} ${isDark ? "bg-[#ffffff]/5" : "bg-[#0b0c0b]/5"} flex items-center gap-4`}>
+              <span className="font-['Orbitron'] text-[9px] font-black tracking-[2px] text-[#0b0c0b]/35 uppercase shrink-0">Online</span>
+              <div className="flex items-center gap-2">
                 {friendsList.filter(f => f.status !== "Offline").map((friend) => (
                   <button
                     key={friend.id}
                     onClick={() => setActiveFriendId(friend.id)}
-                    title={`${friend.name} (${friend.status})`}
-                    className={`relative flex h-10 w-10 items-center justify-center rounded-full bg-[#1b2230] border transition-all hover:scale-105 ${
-                      activeFriendId === friend.id ? "border-[#fb923c] scale-105" : "border-[#fb923c]/20"
+                    title={`${friend.name} — ${friend.status}`}
+                    className={`relative flex h-7 w-7 items-center justify-center border text-[9px] font-black transition-colors ${
+                      activeFriendId === friend.id
+                        ? (isDark ? "border-[#e53e3e] bg-[#e53e3e]/10 text-[#e53e3e]" : "border-[#0b0c0b] bg-[#0b0c0b] text-[#cbd4cc]")
+                        : (isDark ? "border-[#ffffff]/15 text-[#cbd4cc]/60 hover:border-[#e53e3e]/40" : "border-[#0b0c0b]/20 text-[#0b0c0b]/50 hover:border-[#0b0c0b]/50")
                     }`}
                   >
-                    <span className="text-xs font-black text-[#fb923c]">{friend.initial}</span>
-                    <div className="absolute -bottom-1.5 -right-1.5 p-0.5 rounded-full bg-[#1b2230]">
-                      <StatusIcon status={friend.status} sizeClass="h-3.5 w-3.5" />
-                    </div>
+                    {friend.initial}
+                    <span className={`absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full border border-[${isDark ? "#0a0c10" : "#cbd4cc"}] ${
+                      friend.status === "Online" ? "bg-[#22c55e]" :
+                      friend.status === "In-Game" ? "bg-[#a370f7]" : "bg-[#f0b232]"
+                    }`} />
                   </button>
                 ))}
               </div>
@@ -594,9 +603,9 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   {activeFriend.status !== "Offline" && (
                     <button
                       onClick={() => alert(`Lobby invitation sent to ${activeFriend.name}!`)}
-                      className="bg-[#fb923c] hover:bg-[#fb923c]/90 text-[#0d1016] text-[10px] font-black tracking-[1.5px] px-3.5 py-1.5 rounded-lg uppercase transition-all shadow-[0_0_12px_rgba(251,146,60,0.2)]"
+                      className={`font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase border-b border-[#e53e3e]/50 text-[#e53e3e] hover:border-[#e53e3e] transition-colors bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer pb-px`}
                     >
-                      Invite to Lobby
+                      INVITE TO LOBBY <span className="text-[10px]">→</span>
                     </button>
                   )}
                 </div>
@@ -607,8 +616,8 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                     const isSelf = msg.sender === "You";
                     return (
                       <div key={i} className={`flex flex-col ${isSelf ? "items-end" : "items-start"}`}>
-                        <div className={`px-4 py-2 rounded-xl max-w-md text-xs ${
-                          isSelf ? "bg-[#fb923c] text-black" : (isDark ? "bg-[#121620] text-[#cbd4cc] border border-[#ffffff]/10" : "bg-white text-[#0b0c0b] border border-[#0b0c0b]/10")
+                        <div className={`px-4 py-2  max-w-md text-xs ${
+                          isSelf ? "bg-[#e53e3e] text-black" : (isDark ? "bg-[#121620] text-[#cbd4cc] border border-[#ffffff]/10" : "bg-white text-[#0b0c0b] border border-[#0b0c0b]/10")
                         }`}>
                           {msg.text}
                         </div>
@@ -625,11 +634,11 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                     value={newMessage}
                     onChange={(e) => setNewMessage(e.target.value)}
                     placeholder={`Send message to ${activeFriend.name}...`}
-                    className={`flex-1 ${isDark ? "bg-[#121620] text-[#e6e8eb]" : "bg-white text-[#0b0c0b]"} placeholder:text-[#cbd4cc]/30 border ${borderFilter} rounded-xl px-4 py-2.5 text-xs focus:outline-none focus:border-[#fb923c]`}
+                    className={`flex-1 ${isDark ? "bg-[#121620] text-[#e6e8eb]" : "bg-white text-[#0b0c0b]"} placeholder:text-[#cbd4cc]/30 border ${borderFilter}  px-4 py-2.5 text-xs focus:outline-none focus:border-[#e53e3e]`}
                   />
                   <button
                     type="submit"
-                    className="bg-[#fb923c] text-[#0d1016] hover:bg-[#fb923c]/90 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all"
+                    className="bg-[#e53e3e] text-[#0d1016] hover:bg-[#e53e3e]/90 px-5 py-2.5  text-xs font-black uppercase tracking-[2px] transition-all"
                   >
                     SEND
                   </button>
@@ -654,7 +663,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
         {/* Header */}
         <div className={`flex items-center justify-between border-b ${borderColor} pb-4 mb-4 px-2`}>
           <div>
-            <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#fb923c]">
+            <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#e53e3e]">
               TOURNAMENTS ARENA
             </p>
             <h2 className={`mt-1 text-2xl font-black uppercase tracking-tight ${textColor} font-['Orbitron']`}>
@@ -672,11 +681,11 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
               const isCompleted = tourney.status === "Completed";
               
               return (
-                <div key={tourney.id} className={`relative border ${borderColor} ${isDark ? "bg-[#0d1016]/90" : "bg-[#ffffff]/90"} p-5 rounded-2xl flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-sm`}>
+                <div key={tourney.id} className={`relative border ${borderColor} ${isDark ? "bg-[#0d1016]/90" : "bg-[#ffffff]/90"} p-5  flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] backdrop-blur-sm`}>
                   <div>
                     {/* Header */}
                     <div className="flex justify-between items-center mb-3">
-                      <span className={`text-[10px] font-black font-mono tracking-widest ${isLive ? "text-red-500" : isCompleted ? "text-gray-400" : "text-[#fb923c]"}`}>
+                      <span className={`text-[10px] font-black font-mono tracking-widest ${isLive ? "text-red-500" : isCompleted ? "text-gray-400" : "text-[#e53e3e]"}`}>
                         // {tourney.game}
                       </span>
                       <span className={`text-[9px] uppercase tracking-wider font-bold px-2 py-0.5 rounded border ${
@@ -684,7 +693,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                           ? "bg-red-500/10 text-red-500 border-red-500/20 animate-pulse" 
                           : isCompleted 
                             ? "bg-gray-500/10 text-gray-500 border-gray-500/20" 
-                            : "bg-[#fb923c]/10 text-[#fb923c] border-[#fb923c]/20"
+                            : "bg-[#e53e3e]/10 text-[#e53e3e] border-[#e53e3e]/20"
                       }`}>
                         {tourney.status}
                       </span>
@@ -711,21 +720,21 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
 
                   {/* Actions */}
                   {isCompleted ? (
-                    <button disabled className="w-full bg-gray-500/10 text-gray-400/60 py-2.5 rounded-xl text-xs font-black uppercase tracking-[1.5px] cursor-not-allowed border border-gray-500/10">
+                    <button disabled className="w-full bg-gray-500/10 text-gray-400/60 py-2.5  text-xs font-black uppercase tracking-[1.5px] cursor-not-allowed border border-gray-500/10">
                       Ended
                     </button>
                   ) : isLive ? (
-                    <button onClick={() => alert("Launching Stream overlay...")} className="w-full bg-[#e53e3e] hover:bg-[#c53030] text-white py-2.5 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all hover:shadow-[0_0_15px_rgba(229,62,62,0.3)]">
+                    <button onClick={() => alert("Launching Stream overlay...")} className="w-full bg-[#e53e3e] hover:bg-[#c53030] text-white py-2.5  text-xs font-black uppercase tracking-[1.5px] transition-all hover:shadow-[0_0_15px_rgba(229,62,62,0.3)]">
                       Watch Match
                     </button>
                   ) : (
                     <button
                       onClick={() => handleRegisterTournament(tourney.id, tourney.name)}
                       disabled={isRegistered}
-                      className={`w-full py-2.5 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all ${
+                      className={`w-full py-2.5  text-xs font-black uppercase tracking-[1.5px] transition-all ${
                         isRegistered 
                           ? "bg-green-500/15 text-green-500 border border-green-500/20 cursor-default" 
-                          : "bg-[#fb923c] hover:bg-[#fb923c]/90 text-[#0d1016]"
+                          : "bg-[#e53e3e] hover:bg-[#e53e3e]/90 text-[#0d1016]"
                       }`}
                     >
                       {isRegistered ? "Registered" : "Register Arena"}
@@ -733,8 +742,8 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   )}
 
                   {/* Corner accents */}
-                  <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#fb923c]/20 rounded-tl-lg" />
-                  <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#fb923c]/20 rounded-br-lg" />
+                  <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#e53e3e]/20 rounded-tl-lg" />
+                  <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#e53e3e]/20 rounded-br-lg" />
                 </div>
               );
             })}
@@ -750,7 +759,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
         {/* Header */}
         <div className={`flex items-center justify-between border-b ${borderColor} pb-4 mb-4 px-2`}>
           <div>
-            <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#fb923c]">
+            <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#e53e3e]">
               SYSTEM ALERTS
             </p>
             <h2 className={`mt-1 text-2xl font-black uppercase tracking-tight ${textColor} font-['Orbitron']`}>
@@ -760,57 +769,54 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
         </div>
 
         {/* Notifications List */}
-        <div className="flex-1 overflow-y-auto min-h-0 pb-6 pr-4 space-y-2 w-full px-2">
+        <div className="flex-1 overflow-y-auto min-h-0 pb-6 space-y-px w-full">
           {notifications.map((notif) => (
             <div
               key={notif.id}
-              className={`relative border ${borderColor} ${isDark ? "bg-[#0d1016]/80" : "bg-[#ffffff]/80"} py-2 px-5 rounded-xl flex items-center justify-between shadow-[0_2px_12px_rgba(0,0,0,0.05)] backdrop-blur-sm transition-all w-full`}
+              className={`relative flex items-start justify-between gap-6 border-b ${borderColor} px-4 py-4 transition-colors ${
+                notif.resolved ? "opacity-50" : (isDark ? "hover:bg-[#ffffff]/3" : "hover:bg-[#0b0c0b]/3")
+              }`}
             >
-              {/* Left Side: Icon & Message details on single line */}
-              <div className="flex items-center gap-4 flex-1 pr-6 min-w-0">
-                <div className="flex-shrink-0">
-                  {notif.type === "lobby" && (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-orange-500/10 text-orange-500 text-sm">
-                      🎮
-                    </span>
-                  )}
-                  {notif.type === "friend_request" && (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-green-500/10 text-green-500 text-sm">
-                      👤
-                    </span>
-                  )}
-                  {notif.type === "tournament" && (
-                    <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-purple-500/10 text-purple-500 text-sm">
-                      🏆
-                    </span>
-                  )}
-                </div>
+              {/* Left: type label + message */}
+              <div className="flex items-start gap-4 min-w-0 flex-1">
+                {/* Type tag */}
+                <span className={`mt-0.5 shrink-0 font-['Orbitron'] text-[8px] font-black tracking-[1.5px] uppercase border px-1.5 py-0.5 ${
+                  notif.type === "lobby"
+                    ? "border-[#e53e3e]/40 text-[#e53e3e]"
+                    : notif.type === "friend_request"
+                    ? "border-[#22c55e]/40 text-[#22c55e]"
+                    : "border-[#a370f7]/40 text-[#a370f7]"
+                }`}>
+                  {notif.type === "lobby" ? "LOBBY" : notif.type === "friend_request" ? "FRIEND" : "TOURNEY"}
+                </span>
 
-                <div className="flex items-center gap-3 min-w-0 truncate">
-                  <h4 className={`font-['Orbitron'] text-xs font-black tracking-wide ${textColor} whitespace-nowrap`}>
+                <div className="min-w-0">
+                  <p className={`font-['Orbitron'] text-[11px] font-black tracking-[0.5px] ${textColor} leading-tight`}>
                     {notif.title}
-                  </h4>
-                  <span className={`text-[10px] ${textMuted} truncate`}>{notif.message}</span>
+                  </p>
+                  <p className={`font-['Share_Tech_Mono'] text-[10px] ${textMuted} mt-0.5 leading-snug`}>
+                    {notif.message}
+                  </p>
                 </div>
               </div>
 
-              {/* Right Side: Actions, Resolved Status & Timestamp */}
-              <div className="flex items-center gap-4 flex-shrink-0">
+              {/* Right: actions or resolved + time */}
+              <div className="flex items-center gap-4 shrink-0">
                 {!notif.resolved ? (
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-3">
                     {notif.type === "lobby" && (
                       <>
                         <button
                           onClick={() => handleResolveNotification(notif.id, "accept", `Joined ${notif.sender}'s ${notif.game} lobby!`)}
-                          className="bg-[#fb923c] hover:bg-[#fb923c]/90 text-[#0d1016] text-[9px] font-black tracking-[1px] px-3 py-1.5 rounded-lg uppercase transition-all"
+                          className={`font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase border-b border-[#e53e3e]/50 text-[#e53e3e] hover:border-[#e53e3e] transition-colors bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer pb-px`}
                         >
-                          Accept
+                          ACCEPT
                         </button>
                         <button
                           onClick={() => handleResolveNotification(notif.id, "decline", "Ignored lobby invitation.")}
-                          className={`bg-transparent border ${borderColor} ${textColor} text-[9px] font-black tracking-[1px] px-3 py-1.5 rounded-lg uppercase hover:bg-red-500/15 hover:text-red-500 hover:border-red-500/20 transition-all`}
+                          className={`font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase ${textMuted} hover:${textColor} transition-colors bg-transparent border-none cursor-pointer`}
                         >
-                          Ignore
+                          IGNORE
                         </button>
                       </>
                     )}
@@ -818,44 +824,44 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                       <>
                         <button
                           onClick={() => handleResolveNotification(notif.id, "accept", `Accepted friend request from ${notif.sender}!`)}
-                          className="bg-green-500 hover:bg-green-600 text-white text-[9px] font-black tracking-[1px] px-3.5 py-1.5 rounded-lg uppercase transition-all"
+                          className={`font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase border-b border-[#22c55e]/50 text-[#22c55e] hover:border-[#22c55e] transition-colors bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer pb-px`}
                         >
-                          Accept
+                          ACCEPT
                         </button>
                         <button
                           onClick={() => handleResolveNotification(notif.id, "decline", `Declined friend request from ${notif.sender}.`)}
-                          className={`bg-transparent border ${borderColor} ${textColor} text-[9px] font-black tracking-[1px] px-3.5 py-1.5 rounded-lg uppercase hover:bg-red-500/15 hover:text-red-500 hover:border-red-500/20 transition-all`}
+                          className={`font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase ${textMuted} hover:${textColor} transition-colors bg-transparent border-none cursor-pointer`}
                         >
-                          Decline
+                          DECLINE
                         </button>
                       </>
                     )}
                     {notif.type === "tournament" && (
                       <button
-                        onClick={() => {
-                          onViewChange("tournaments");
-                          handleResolveNotification(notif.id, "view", "Navigating to tournaments board.");
-                        }}
-                        className="bg-[#fb923c] hover:bg-[#fb923c]/90 text-[#0d1016] text-[9px] font-black tracking-[1px] px-3.5 py-1.5 rounded-lg uppercase transition-all"
+                        onClick={() => { onViewChange("tournaments"); handleResolveNotification(notif.id, "view", "Navigating to tournaments board."); }}
+                        className={`font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase border-b border-[#a370f7]/50 text-[#a370f7] hover:border-[#a370f7] transition-colors bg-transparent border-l-0 border-r-0 border-t-0 cursor-pointer pb-px`}
                       >
-                        Register
+                        REGISTER
                       </button>
                     )}
                   </div>
                 ) : (
-                  <p className="text-[9px] font-mono text-green-500 font-bold uppercase tracking-wider whitespace-nowrap">
-                    Resolved: {notif.statusText}
-                  </p>
+                  <span className="font-['Share_Tech_Mono'] text-[9px] text-[#22c55e] uppercase tracking-wider">
+                    ✓ done
+                  </span>
                 )}
-                
-                <span className={`text-[9px] ${textMutedLight} font-mono w-16 text-right whitespace-nowrap`}>
+                <span className={`font-['Share_Tech_Mono'] text-[9px] ${textMutedLight} whitespace-nowrap`}>
                   {notif.time}
                 </span>
               </div>
 
-              {/* Corner accents */}
-              <span className="absolute top-0 left-0 h-1.5 w-1.5 border-l border-t border-[#fb923c]/20 rounded-tl" />
-              <span className="absolute bottom-0 right-0 h-1.5 w-1.5 border-r border-b border-[#fb923c]/20 rounded-br" />
+              {/* left edge accent on unresolved */}
+              {!notif.resolved && (
+                <span className={`absolute left-0 top-0 bottom-0 w-0.5 ${
+                  notif.type === "lobby" ? "bg-[#e53e3e]" :
+                  notif.type === "friend_request" ? "bg-[#22c55e]" : "bg-[#a370f7]"
+                }`} />
+              )}
             </div>
           ))}
 
@@ -879,7 +885,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
       
       {/* Lobby Invitation Drawer/Popup on Right Side */}
       {showInviteCard && (
-        <div className={`fixed right-6 top-[120px] w-[280px] max-h-[380px] border ${borderColor} ${isDark ? "bg-[#0d1016]/95" : "bg-[#cbd4cc]/95"} rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.4)] backdrop-blur-md flex flex-col p-4 z-40 animate-fade-in`}>
+        <div className={`fixed right-6 top-[120px] w-[280px] max-h-[380px] border ${borderColor} ${isDark ? "bg-[#0d1016]/95" : "bg-[#cbd4cc]/95"}  shadow-[0_20px_50px_rgba(0,0,0,0.4)] backdrop-blur-md flex flex-col p-4 z-40 animate-fade-in`}>
           <div className="flex items-center justify-between mb-3 pb-2 border-b border-[#ffffff]/10">
             <span className={`font-['Orbitron'] text-[10px] font-black tracking-[2px] ${textColor}`}>INVITE PLAYERS</span>
             <button onClick={() => setShowInviteCard(false)} className="text-[10px] uppercase font-bold text-red-500 hover:text-red-400">Close</button>
@@ -890,14 +896,14 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
             placeholder="Search friends..."
             value={inviteSearchQuery}
             onChange={(e) => setInviteSearchQuery(e.target.value)}
-            className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter} rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#fb923c] mb-3`}
+            className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter}  px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#e53e3e] mb-3`}
           />
 
           <div className="flex-1 overflow-y-auto divide-y divide-[#ffffff]/5 space-y-2 pr-1">
             {filteredFriends.map((friend) => (
               <div key={friend.id} className="flex items-center justify-between py-2">
                 <div className="flex items-center gap-2">
-                  <div className="h-6 w-6 rounded-full bg-[#1b2230] border border-[#fb923c]/20 flex items-center justify-center text-[8px] font-bold text-[#fb923c]">
+                  <div className="h-6 w-6 rounded bg-[#1b2230] border border-[#e53e3e]/20 flex items-center justify-center text-[8px] font-bold text-[#e53e3e]">
                     {friend.initial}
                   </div>
                   <span className={`text-xs font-bold ${textColor}`}>{friend.name}</span>
@@ -907,7 +913,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   className={`text-[9px] font-black uppercase tracking-[1px] px-2.5 py-1 rounded transition-all ${
                     invitedPlayerIds.includes(friend.id)
                       ? "bg-gray-600/40 text-gray-400 cursor-default"
-                      : "bg-[#fb923c] hover:bg-[#fb923c]/90 text-[#0d1016]"
+                      : "bg-[#e53e3e] hover:bg-[#e53e3e]/90 text-[#0d1016]"
                   }`}
                 >
                   {invitedPlayerIds.includes(friend.id) ? "Invited" : "Invite"}
@@ -918,8 +924,8 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
               <p className="text-center text-[10px] text-gray-500 py-4 font-bold">// No friends found</p>
             )}
           </div>
-          <span className="absolute top-0 left-0 h-2.5 w-2.5 border-l border-t border-[#fb923c]/40 rounded-tl-lg" />
-          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-r border-b border-[#fb923c]/40 rounded-br-lg" />
+          <span className="absolute top-0 left-0 h-2.5 w-2.5 border-l border-t border-[#e53e3e]/40 rounded-tl-lg" />
+          <span className="absolute bottom-0 right-0 h-2.5 w-2.5 border-r border-b border-[#e53e3e]/40 rounded-br-lg" />
         </div>
       )}
 
@@ -929,14 +935,14 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
           {/* Lobby Room Header */}
           <div className={`flex justify-between items-center border-b ${borderColor} pb-4 mb-4`}>
             <div>
-              <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#fb923c]">
+              <p className="font-['Orbitron'] text-xs font-black uppercase tracking-[6px] text-[#e53e3e]">
                 CUSTOM LOBBY
               </p>
               <div className="flex items-center gap-3 mt-1">
                 <h2 className={`text-2xl font-black uppercase tracking-tight ${textColor} font-['Orbitron']`}>
                   Room // {lobbyGame}
                 </h2>
-                <span className={`text-xs font-mono font-bold bg-[#fb923c]/15 text-[#fb923c] px-3 py-1 rounded border border-[#fb923c]/30 uppercase`}>
+                <span className={`text-xs font-mono font-bold bg-[#e53e3e]/15 text-[#e53e3e] px-3 py-1 rounded border border-[#e53e3e]/30 uppercase`}>
                   Room Code: {lobbyCode}
                 </span>
               </div>
@@ -945,19 +951,19 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
             <div className="flex gap-2">
               <button
                 onClick={handleCopyInviteLink}
-                className="bg-[#fb923c] hover:bg-[#fb923c]/90 text-black px-5 py-2 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all shadow-[0_0_15px_rgba(251,146,60,0.2)]"
+                className="bg-[#e53e3e] hover:bg-[#e53e3e]/90 text-black px-5 py-2  text-xs font-black uppercase tracking-[1.5px] transition-all shadow-[0_0_15px_rgba(251,146,60,0.2)]"
               >
                 Copy Invite Link
               </button>
               <button
                 onClick={() => setShowInviteCard(!showInviteCard)}
-                className="bg-transparent hover:bg-[#fb923c]/15 text-[#fb923c] border border-[#fb923c]/40 px-5 py-2 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all"
+                className="bg-transparent hover:bg-[#e53e3e]/15 text-[#e53e3e] border border-[#e53e3e]/40 px-5 py-2  text-xs font-black uppercase tracking-[1.5px] transition-all"
               >
                 + Invite Players
               </button>
               <button
                 onClick={handleLeaveLobby}
-                className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-5 py-2 rounded-xl text-xs font-black uppercase tracking-[1.5px] transition-all"
+                className="bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 px-5 py-2  text-xs font-black uppercase tracking-[1.5px] transition-all"
               >
                 Leave Room
               </button>
@@ -985,10 +991,10 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   return (
                     <div
                       key={index}
-                      className={`relative border ${borderColor} ${isDark ? "bg-[#0d1016]/90" : "bg-[#ffffff]/90"} p-4 rounded-xl flex items-center justify-between shadow-md backdrop-blur-sm`}
+                      className={`relative border ${borderColor} ${isDark ? "bg-[#0d1016]/90" : "bg-[#ffffff]/90"} p-4  flex items-center justify-between shadow-md backdrop-blur-sm`}
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-full bg-[#1b2230] border border-[#fb923c]/25 flex items-center justify-center text-xs font-black text-[#fb923c]">
+                        <div className="h-9 w-9 rounded bg-[#1b2230] border border-[#e53e3e]/25 flex items-center justify-center text-xs font-black text-[#e53e3e]">
                           {memberName.substring(0,2).toUpperCase()}
                         </div>
                         <div>
@@ -1014,7 +1020,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
             </div>
 
             {/* Right Side: Lobby Chat Panel (3 columns) */}
-            <div className={`md:col-span-3 border ${borderColor} rounded-2xl ${isDark ? "bg-[#0a0c10]/80" : "bg-[#ffffff]/80"} flex flex-col overflow-hidden shadow-lg backdrop-blur-md`}>
+            <div className={`md:col-span-3 border ${borderColor}  ${isDark ? "bg-[#0a0c10]/80" : "bg-[#ffffff]/80"} flex flex-col overflow-hidden shadow-lg backdrop-blur-md`}>
               <div className={`px-5 py-3.5 border-b ${borderColor} ${isDark ? "bg-[#ffffff]/3" : "bg-[#0b0c0b]/3"}`}>
                 <h3 className={`font-['Orbitron'] text-xs font-black ${textColor}`}>Lobby Dialogue</h3>
               </div>
@@ -1027,7 +1033,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   if (isSystem) {
                     return (
                       <div key={idx} className="text-center py-1">
-                        <span className="px-3 py-1 rounded bg-[#fb923c]/10 border border-[#fb923c]/20 text-[9px] font-bold font-mono text-[#fb923c] uppercase tracking-[1px]">
+                        <span className="px-3 py-1 rounded bg-[#e53e3e]/10 border border-[#e53e3e]/20 text-[9px] font-bold font-mono text-[#e53e3e] uppercase tracking-[1px]">
                           {msg.text}
                         </span>
                       </div>
@@ -1036,8 +1042,8 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   return (
                     <div key={idx} className={`flex flex-col ${isSelf ? "items-end" : "items-start"}`}>
                       <span className={`text-[8.5px] ${textMutedLight} mb-0.5 px-1 font-bold`}>{isSelf ? "You" : msg.sender}</span>
-                      <div className={`px-3 py-1.5 rounded-xl max-w-sm text-xs ${
-                        isSelf ? "bg-[#fb923c] text-black" : (isDark ? "bg-[#121620] text-[#cbd4cc] border border-[#ffffff]/10" : "bg-white text-[#0b0c0b] border border-[#0b0c0b]/10")
+                      <div className={`px-3 py-1.5  max-w-sm text-xs ${
+                        isSelf ? "bg-[#e53e3e] text-black" : (isDark ? "bg-[#121620] text-[#cbd4cc] border border-[#ffffff]/10" : "bg-white text-[#0b0c0b] border border-[#0b0c0b]/10")
                       }`}>
                         {msg.text}
                       </div>
@@ -1053,11 +1059,11 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   value={lobbyChatInput}
                   onChange={(e) => setLobbyChatInput(e.target.value)}
                   placeholder="Communicate with team lobby..."
-                  className={`flex-1 ${isDark ? "bg-[#121620] text-[#e6e8eb]" : "bg-white text-[#0b0c0b]"} placeholder:text-[#cbd4cc]/30 border ${borderFilter} rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#fb923c]`}
+                  className={`flex-1 ${isDark ? "bg-[#121620] text-[#e6e8eb]" : "bg-white text-[#0b0c0b]"} placeholder:text-[#cbd4cc]/30 border ${borderFilter}  px-3 py-2 text-xs focus:outline-none focus:border-[#e53e3e]`}
                 />
                 <button
                   type="submit"
-                  className="bg-[#fb923c] text-[#0d1016] hover:bg-[#fb923c]/90 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-[1px] transition-all"
+                  className="bg-[#e53e3e] text-[#0d1016] hover:bg-[#e53e3e]/90 px-4 py-2  text-xs font-black uppercase tracking-[1px] transition-all"
                 >
                   Send
                 </button>
@@ -1070,7 +1076,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
           <div className="flex justify-end pt-2">
             <button
               onClick={handleStartGameMatch}
-              className="bg-[#fb923c] text-[#0d1016] hover:bg-[#fb923c]/90 px-10 py-3.5 rounded-xl text-xs font-black uppercase tracking-[2px] shadow-[0_0_20px_rgba(251,146,60,0.3)] transition-all hover:scale-105"
+              className="bg-[#e53e3e] text-[#0d1016] hover:bg-[#e53e3e]/90 px-10 py-3.5  text-xs font-black uppercase tracking-[2px] shadow-[0_0_20px_rgba(251,146,60,0.3)] transition-all hover:scale-105"
             >
               START GAME MATCH
             </button>
@@ -1081,7 +1087,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
         <div className="flex-1 grid md:grid-cols-3 gap-8 items-stretch justify-center h-full py-4 min-h-0 px-2">
           
           {/* Card 1: Random Match Setup */}
-          <div className={`border ${borderColor} ${isDark ? "bg-[#0d1016]/75" : "bg-[#ffffff]/75"} p-6 rounded-2xl backdrop-blur-sm flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full relative`}>
+          <div className={`border ${borderColor} ${isDark ? "bg-[#0d1016]/75" : "bg-[#ffffff]/75"} p-6  backdrop-blur-sm flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full relative`}>
             
             {/* Setup / Active Queue State split inside Card 1 */}
             {!showPlayConfig && !isMatching ? (
@@ -1097,7 +1103,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 
                 <button
                   onClick={() => setShowPlayConfig(true)}
-                  className="w-full bg-[#fb923c] text-[#0d1016] hover:bg-[#fb923c]/90 py-4 rounded-xl text-xs font-black uppercase tracking-[2px] shadow-[0_0_20px_rgba(251,146,60,0.25)] transition-all active:scale-95"
+                  className="w-full bg-[#e53e3e] text-[#0d1016] hover:bg-[#e53e3e]/90 py-4  text-xs font-black uppercase tracking-[2px] shadow-[0_0_20px_rgba(251,146,60,0.25)] transition-all active:scale-95"
                 >
                   RANDOM MATCH
                 </button>
@@ -1120,7 +1126,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                       <select
                         value={selectedGame}
                         onChange={(e) => setSelectedGame(e.target.value)}
-                        className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter} rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-[#fb923c] transition-all font-mono`}
+                        className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter}  px-3 py-2 text-xs focus:outline-none focus:border-[#e53e3e] transition-all font-mono`}
                       >
                         <option value="VALORANT">VALORANT</option>
                         <option value="CS2">CS2 (COUNTER-STRIKE 2)</option>
@@ -1135,7 +1141,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
 
                     <div className="flex items-center justify-between border-t border-b border-[#ffffff]/10 dark:border-[#ffffff]/10 py-3.5 text-xs">
                       <span className={textMuted}>Selected Title:</span>
-                      <span className={`font-bold font-mono text-[#fb923c] uppercase tracking-wider`}>{selectedGame}</span>
+                      <span className={`font-bold font-mono text-[#e53e3e] uppercase tracking-wider`}>{selectedGame}</span>
                     </div>
                   </div>
                 </div>
@@ -1143,13 +1149,13 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 <div className="flex gap-2 mt-4">
                   <button
                     onClick={handleStartMatchmaking}
-                    className="flex-1 bg-[#fb923c] text-[#0d1016] hover:bg-[#fb923c]/90 py-3 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all"
+                    className="flex-1 bg-[#e53e3e] text-[#0d1016] hover:bg-[#e53e3e]/90 py-3  text-xs font-black uppercase tracking-[2px] transition-all"
                   >
                     START MATCH
                   </button>
                   <button
                     onClick={() => setShowPlayConfig(false)}
-                    className={`px-4 bg-transparent border ${borderColor} ${textColor} rounded-xl text-xs font-black uppercase tracking-[1px] hover:bg-[#fb923c]/5 transition-all`}
+                    className={`px-4 bg-transparent border ${borderColor} ${textColor}  text-xs font-black uppercase tracking-[1px] hover:bg-[#e53e3e]/5 transition-all`}
                   >
                     Back
                   </button>
@@ -1158,8 +1164,8 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
             ) : (
               <div className="flex-1 flex flex-col justify-between items-center text-center py-4">
                 <div className="relative h-16 w-16 flex items-center justify-center mt-6">
-                  <div className="absolute inset-0 rounded-full border-4 border-[#fb923c]/20 animate-ping" />
-                  <div className="h-10 w-10 rounded-full border-4 border-[#fb923c] animate-spin border-t-transparent" />
+                  <div className="absolute inset-0 rounded-full border-4 border-[#e53e3e]/20 animate-ping" />
+                  <div className="h-10 w-10 rounded-full border-4 border-[#e53e3e] animate-spin border-t-transparent" />
                 </div>
 
                 <div>
@@ -1167,14 +1173,14 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                     SEARCHING RANDOM MATCH
                   </p>
                   <p className={`text-[10px] ${textMutedLight} mt-1`}>
-                    Searching queue in: <span className="font-bold text-[#fb923c]">{selectedGame}</span>
+                    Searching queue in: <span className="font-bold text-[#e53e3e]">{selectedGame}</span>
                   </p>
-                  <p className="text-xl font-mono font-bold text-[#fb923c] mt-4">{matchTimer}s</p>
+                  <p className="text-xl font-mono font-bold text-[#e53e3e] mt-4">{matchTimer}s</p>
                 </div>
 
                 <button
                   onClick={handleCancelMatchmaking}
-                  className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 py-2.5 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all mt-4"
+                  className="w-full bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/30 py-2.5  text-xs font-black uppercase tracking-[2px] transition-all mt-4"
                 >
                   CANCEL QUEUE
                 </button>
@@ -1182,12 +1188,12 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
             )}
             
             {/* Corner accents */}
-            <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#fb923c]/30 rounded-tl-lg" />
-            <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#fb923c]/30 rounded-br-lg" />
+            <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#e53e3e]/30 rounded-tl-lg" />
+            <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#e53e3e]/30 rounded-br-lg" />
           </div>
 
           {/* Card 2: Create Custom Lobby */}
-          <div className={`border ${borderColor} ${isDark ? "bg-[#0d1016]/75" : "bg-[#ffffff]/75"} p-6 rounded-2xl backdrop-blur-sm flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full relative`}>
+          <div className={`border ${borderColor} ${isDark ? "bg-[#0d1016]/75" : "bg-[#ffffff]/75"} p-6  backdrop-blur-sm flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full relative`}>
             <div className="space-y-4 text-left">
               <h3 className={`font-['Orbitron'] text-base font-black ${textColor} uppercase tracking-[1.5px]`}>
                 Create Custom Lobby
@@ -1205,7 +1211,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 <select
                   value={customLobbyGame}
                   onChange={(e) => setCustomLobbyGame(e.target.value)}
-                  className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter} rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#fb923c] transition-all font-mono`}
+                  className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter}  px-3 py-2.5 text-xs focus:outline-none focus:border-[#e53e3e] transition-all font-mono`}
                 >
                   <option value="VALORANT">VALORANT</option>
                   <option value="CS2">CS2 (COUNTER-STRIKE 2)</option>
@@ -1225,7 +1231,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                 <select
                   value={customLobbySize}
                   onChange={(e) => setCustomLobbySize(parseInt(e.target.value))}
-                  className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter} rounded-xl px-3 py-2.5 text-xs focus:outline-none focus:border-[#fb923c] transition-all font-mono`}
+                  className={`w-full ${isDark ? "bg-[#121620] text-[#cbd4cc]" : "bg-white text-[#0b0c0b]"} border ${borderFilter}  px-3 py-2.5 text-xs focus:outline-none focus:border-[#e53e3e] transition-all font-mono`}
                 >
                   <option value={2}>2 Players (1v1 / Duos)</option>
                   <option value={3}>3 Players (3v3 / Trios)</option>
@@ -1236,19 +1242,19 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
 
               <button
                 onClick={handleCreateCustomLobby}
-                className="w-full bg-[#fb923c] text-[#0d1016] hover:bg-[#fb923c]/90 py-3 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all"
+                className="w-full bg-[#e53e3e] text-[#0d1016] hover:bg-[#e53e3e]/90 py-3  text-xs font-black uppercase tracking-[2px] transition-all"
               >
                 Create Custom Room
               </button>
             </div>
             
             {/* Corner accents */}
-            <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#fb923c]/30 rounded-tl-lg" />
-            <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#fb923c]/30 rounded-br-lg" />
+            <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#e53e3e]/30 rounded-tl-lg" />
+            <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#e53e3e]/30 rounded-br-lg" />
           </div>
 
           {/* Card 3: Join Active Lobby */}
-          <div className={`border ${borderColor} ${isDark ? "bg-[#0d1016]/75" : "bg-[#ffffff]/75"} p-6 rounded-2xl backdrop-blur-sm flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full relative`}>
+          <div className={`border ${borderColor} ${isDark ? "bg-[#0d1016]/75" : "bg-[#ffffff]/75"} p-6  backdrop-blur-sm flex flex-col justify-between shadow-[0_8px_30px_rgb(0,0,0,0.12)] h-full relative`}>
             <div className="space-y-4 text-left">
               <h3 className={`font-['Orbitron'] text-base font-black ${textColor} uppercase tracking-[1.5px]`}>
                 Join Active Lobby
@@ -1268,13 +1274,13 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
                   placeholder="Enter Code or Paste Link"
                   value={lobbyCode}
                   onChange={(e) => setLobbyCode(e.target.value)}
-                  className={`w-full ${isDark ? "bg-[#121620] text-[#e6e8eb] placeholder:text-[#cbd4cc]/30" : "bg-white text-[#0b0c0b] placeholder:text-black/55"} border ${borderFilter} rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#fb923c] transition-all font-mono uppercase`}
+                  className={`w-full ${isDark ? "bg-[#121620] text-[#e6e8eb] placeholder:text-[#cbd4cc]/30" : "bg-white text-[#0b0c0b] placeholder:text-black/55"} border ${borderFilter}  px-3.5 py-2.5 text-xs focus:outline-none focus:border-[#e53e3e] transition-all font-mono uppercase`}
                 />
               </div>
               
               <button
                 type="submit"
-                className="w-full bg-[#e53e3e] text-white hover:bg-[#c53030] py-3 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all"
+                className="w-full bg-[#e53e3e] text-white hover:bg-[#c53030] py-3  text-xs font-black uppercase tracking-[2px] transition-all"
               >
                 Join Custom Room
               </button>
@@ -1282,15 +1288,15 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
               <button
                 type="button"
                 onClick={handleBrowseOpenLobbies}
-                className="w-full bg-transparent border border-[#fb923c]/40 text-[#fb923c] hover:bg-[#fb923c]/10 py-3 rounded-xl text-xs font-black uppercase tracking-[2px] transition-all mt-2 cursor-pointer"
+                className="w-full bg-transparent border border-[#e53e3e]/40 text-[#e53e3e] hover:bg-[#e53e3e]/10 py-3  text-xs font-black uppercase tracking-[2px] transition-all mt-2 cursor-pointer"
               >
                 Browse Open Lobbies
               </button>
             </form>
             
             {/* Corner accents */}
-            <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#fb923c]/30 rounded-tl-lg" />
-            <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#fb923c]/30 rounded-br-lg" />
+            <span className="absolute top-0 left-0 h-2 w-2 border-l border-t border-[#e53e3e]/30 rounded-tl-lg" />
+            <span className="absolute bottom-0 right-0 h-2 w-2 border-r border-b border-[#e53e3e]/30 rounded-br-lg" />
           </div>
 
         </div>

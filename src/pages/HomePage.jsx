@@ -123,7 +123,8 @@ function SectionHeading({ index, children }) {
 
 // ─── Page sections ───────────────────────────────────────────────────────────
 
-function Hero({ username }) {
+function Hero({ username, isLoggedIn }) {
+  const navigate = useNavigate();
   return (
     <section className="relative min-h-screen flex items-center px-4 sm:px-8 lg:px-[60px]">
       {/* Vertical section index — hidden on mobile */}
@@ -175,17 +176,21 @@ function Hero({ username }) {
             Tournament hosting — all in one platform.
           </p>
 
-          <div className="mt-10 flex items-center gap-5">
+          <div className="mt-10 flex flex-wrap items-center gap-4">
             <div className="group">
-              <Button variant="hud" size="lg" className="group" onClick={() => {}}>
+              <Button variant="hud" size="lg" className="group" onClick={() => navigate(isLoggedIn ? "/arena" : "/signup")}>
                 START PLAYING
               </Button>
             </div>
             <Link
               to="/arena"
-              className="font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b]/50 uppercase hover:text-[#0b0c0b] transition-colors"
+              className="relative inline-flex items-center gap-2 border border-[#0b0c0b] px-6 py-3 font-['Rajdhani'] text-[13px] font-bold tracking-[3px] text-[#0b0c0b] no-underline uppercase transition-colors hover:bg-[#0b0c0b] hover:text-[#cbd4cc] group"
             >
-              VIEW ARENA <span className="text-[#e53e3e]">→</span>
+              {/* corner ticks */}
+              <span className="absolute top-0 left-0 h-2 w-2 border-l-2 border-t-2 border-[#e53e3e] -translate-x-px -translate-y-px" />
+              <span className="absolute bottom-0 right-0 h-2 w-2 border-r-2 border-b-2 border-[#e53e3e] translate-x-px translate-y-px" />
+              ENTER ARENA
+              <span className="text-[#e53e3e] transition-transform group-hover:translate-x-0.5">→</span>
             </Link>
           </div>
         </div>
@@ -528,7 +533,9 @@ function HomeHeader({ navLogoRef, logoVisible }) {
           ref={navLogoRef}
           className={`transition-opacity duration-150 ${logoVisible ? "opacity-100" : "opacity-0"}`}
         >
-          <div className="font-['Orbitron'] font-black text-xl tracking-[2px] text-[#0b0c0b]">MELD</div>
+          <Link to="/" className="no-underline">
+            <div className="font-['Orbitron'] font-black text-xl tracking-[2px] text-[#0b0c0b] hover:opacity-60 transition-opacity">MELD</div>
+          </Link>
         </div>
 
         <nav className="hidden md:flex gap-10">
@@ -607,7 +614,7 @@ function HomeHeader({ navLogoRef, logoVisible }) {
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function HomePage() {
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
   const {
     phase,
     splashLogoRef,
@@ -643,7 +650,7 @@ export default function HomePage() {
       {/* Content sits above the background */}
       <div className="relative z-[2]">
         <HomeHeader navLogoRef={navLogoRef} logoVisible={navLogoVisible} />
-        <Hero username={user?.username} />
+        <Hero username={user?.username} isLoggedIn={isLoggedIn} />
         <StatsBar />
         <FeaturesSection />
         <HowItWorks />

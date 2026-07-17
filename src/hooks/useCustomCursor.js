@@ -1,82 +1,107 @@
 import { useEffect, useRef } from "react";
 
+const INTERACTIVE = "a, button, [role='button'], select, label[for], input, textarea, [tabindex]:not([tabindex='-1'])";
+
 /**
  * Drives the global custom cursor.
- * - Outer ring: lerp-follows mouse (smooth lag), expands on hover, pulses on click
- * - Inner dot: snaps to mouse immediately
+ *
+ * Default state  — dashed ring (4 segments), 4px dot
+ * Hover state    — ring fills solid white, grows to 44px, dot disappears
+ * Click state    — ring shrinks to 20px (pulse feedback)
+ *
+ * Uses mix-blend-mode: exclusion so it inverts on both light & dark bgs.
  */
-export default function useCustomCursor(hoverSelector = "a, button, [role='button'], select, label[for]") {
-  const ringRef = useRef(null);
-  const dotRef = useRef(null);
+export default function useCustomCursor() {
+  const ringRef  = useRef(null);
+  const dotRef   = useRef(null);
+  const labelRef = useRef(null);
 
   useEffect(() => {
-    const ring = ringRef.current;
-    const dot = dotRef.current;
+    const ring  = ringRef.current;
+    const dot   = dotRef.current;
+    const label = labelRef.current;
     if (!ring || !dot) return;
 
-    // Only run on fine-pointer devices
     if (!window.matchMedia("(pointer: fine)").matches) return;
 
     let mouseX = 0, mouseY = 0;
-    let ringX = 0, ringY = 0;
+    let ringX  = 0, ringY  = 0;
     let rafId;
-    let isHovered = false;
+    let hovering = false;
 
-    const setRingSize = (hovered, clicking = false) => {
-      const size = clicking ? 24 : hovered ? 48 : 36;
-      const margin = size / 2;
-      ring.style.width = `${size}px`;
-      ring.style.height = `${size}px`;
-      ring.style.marginLeft = `-${margin}px`;
-      ring.style.marginTop = `-${margin}px`;
+    // ── apply a state to the ring ──────────────────────────────────────────
+    const applyState = (state) => {
+      if (state === "hover") {
+        ring.style.width      = "44px";
+        ring.style.height     = "44px";
+        ring.style.marginLeft = "-22px";
+        ring.style.marginTop  = "-22px";
+        // swap to solid filled circle — hide the SVG dashes, show solid bg
+        ring.dataset.state = "hover";
+        dot.style.opacity  = "0";
+      } else if (state === "click") {
+        ring.style.width      = "20px";
+        ring.style.height     = "20px";
+        ring.style.marginLeft = "-10px";
+        ring.style.marginTop  = "-10px";
+        ring.dataset.state = "click";
+        dot.style.opacity  = "0";
+      } else {
+        ring.style.width      = "36px";
+        ring.style.height     = "36px";
+        ring.style.marginLeft = "-18px";
+        ring.style.marginTop  = "-18px";
+        ring.dataset.state = "default";
+        dot.style.opacity  = "1";
+      }
     };
 
     const onMove = (e) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
       dot.style.left = `${mouseX}px`;
-      dot.style.top = `${mouseY}px`;
+      dot.style.top  = `${mouseY}px`;
     };
 
     const lerp = () => {
-      ringX += (mouseX - ringX) * 0.2;
-      ringY += (mouseY - ringY) * 0.2;
+      ringX += (mouseX - ringX) * 0.18;
+      ringY += (mouseY - ringY) * 0.18;
       ring.style.left = `${ringX}px`;
-      ring.style.top = `${ringY}px`;
+      ring.style.top  = `${ringY}px`;
       rafId = requestAnimationFrame(lerp);
     };
     rafId = requestAnimationFrame(lerp);
 
     const onOver = (e) => {
-      if (e.target.closest(hoverSelector)) {
-        isHovered = true;
-        setRingSize(true);
+      if (e.target.closest(INTERACTIVE)) {
+        hovering = true;
+        applyState("hover");
       }
     };
     const onOut = (e) => {
-      if (e.target.closest(hoverSelector)) {
-        isHovered = false;
-        setRingSize(false);
+      if (e.target.closest(INTERACTIVE)) {
+        hovering = false;
+        applyState("default");
       }
     };
-    const onDown = () => setRingSize(isHovered, true);
-    const onUp   = () => setRingSize(isHovered, false);
+    const onDown = () => applyState("click");
+    const onUp   = () => applyState(hovering ? "hover" : "default");
 
     document.addEventListener("mousemove", onMove);
     document.addEventListener("mouseover", onOver);
-    document.addEventListener("mouseout", onOut);
+    document.addEventListener("mouseout",  onOut);
     document.addEventListener("mousedown", onDown);
-    document.addEventListener("mouseup", onUp);
+    document.addEventListener("mouseup",   onUp);
 
     return () => {
       cancelAnimationFrame(rafId);
       document.removeEventListener("mousemove", onMove);
       document.removeEventListener("mouseover", onOver);
-      document.removeEventListener("mouseout", onOut);
+      document.removeEventListener("mouseout",  onOut);
       document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("mouseup", onUp);
+      document.removeEventListener("mouseup",   onUp);
     };
-  }, [hoverSelector]);
+  }, []);
 
-  return { ringRef, dotRef };
+  return { ringRef, dotRef, labelRef };
 }
