@@ -1,7 +1,63 @@
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../context/AuthContext";
+import { useArena } from "../../context/ArenaContext";
 import { io } from "socket.io-client";
 import { api } from "../../utils/api";
+
+// ── Small inline toast ────────────────────────────────────────────────────────
+function Toast({ message, onDone }) {
+  useEffect(() => {
+    const t = setTimeout(onDone, 2200);
+    return () => clearTimeout(t);
+  }, [onDone]);
+  return (
+    <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-[200] pointer-events-none animate-fade-in">
+      <div className="bg-[#0b0c0b] text-[#cbd4cc] font-['Share_Tech_Mono'] text-[11px] tracking-[1.5px] px-5 py-3 border border-[#e53e3e]/40 shadow-xl">
+        {message}
+      </div>
+    </div>
+  );
+}
+
+// ── Watch-match modal ─────────────────────────────────────────────────────────
+function WatchMatchModal({ tourney, onClose }) {
+  return (
+    <div className="fixed inset-0 z-[120] flex items-center justify-center bg-[#0b0c0b]/70 p-6">
+      <div className="relative w-full max-w-[540px] bg-[#0d0e12] border border-[#e53e3e]/30" style={{ boxShadow: "0 24px 80px rgba(229,62,62,0.15)" }}>
+        <span className="absolute top-0 left-0 h-3 w-3 border-l border-t border-[#e53e3e]/40" />
+        <span className="absolute bottom-0 right-0 h-3 w-3 border-r border-b border-[#e53e3e]/40" />
+        <div className="flex items-center justify-between px-8 py-6 border-b border-[#e53e3e]/15">
+          <div>
+            <p className="font-['Orbitron'] text-[9px] font-black tracking-[3px] text-[#e53e3e] uppercase">LIVE MATCH</p>
+            <h2 className="mt-1 font-['Orbitron'] text-lg font-black tracking-[2px] text-[#e6e8eb] uppercase">{tourney.name}</h2>
+          </div>
+          <button onClick={onClose} className="font-['Rajdhani'] text-[11px] font-bold tracking-[2px] text-[#e6e8eb]/40 uppercase hover:text-[#e6e8eb] bg-transparent border-none cursor-pointer transition-colors">
+            CLOSE <span className="text-[#e53e3e]">×</span>
+          </button>
+        </div>
+        <div className="px-8 py-8 space-y-5">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="h-2 w-2 rounded-full bg-[#e53e3e] animate-pulse" style={{ boxShadow: "0 0 8px rgba(229,62,62,0.8)" }} />
+            <span className="font-['Orbitron'] text-[10px] font-black tracking-[2px] text-[#e53e3e] uppercase">Match In Progress</span>
+          </div>
+          <p className="font-['Share_Tech_Mono'] text-[11px] text-[#e6e8eb]/60 leading-relaxed">
+            // Live stream integration pending. Stream embed will appear here once a broadcast URL is configured for this tournament.
+          </p>
+          <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="border border-[#ffffff]/10 px-4 py-3">
+              <p className="font-['Orbitron'] text-[8px] text-[#e6e8eb]/35 uppercase tracking-[2px] mb-1">GAME</p>
+              <p className="font-['Orbitron'] text-[12px] font-black text-[#e6e8eb]">{tourney.game}</p>
+            </div>
+            <div className="border border-[#ffffff]/10 px-4 py-3">
+              <p className="font-['Orbitron'] text-[8px] text-[#e6e8eb]/35 uppercase tracking-[2px] mb-1">PRIZE POOL</p>
+              <p className="font-['Orbitron'] text-[12px] font-black text-[#e53e3e]">{tourney.prize}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function StatusIcon({ status, sizeClass = "h-2.5 w-2.5" }) {
   if (status === "Online") {
@@ -34,11 +90,18 @@ function StatusIcon({ status, sizeClass = "h-2.5 w-2.5" }) {
 
 export default function CharacterStage({ activeView, onViewChange, theme }) {
   const { user } = useAuth();
+  const { setUnreadNotifCount } = useArena();
   const socketRef = useRef(null);
   const [selectedGame, setSelectedGame] = useState("VALORANT");
   const [showInviteCard, setShowInviteCard] = useState(false);
   const [inviteSearchQuery, setInviteSearchQuery] = useState("");
   const [sentRequests, setSentRequests] = useState([]);
+
+  // Toast state
+  const [toast, setToast] = useState(null); // string | null
+
+  // Watch-match modal
+  const [watchTourney, setWatchTourney] = useState(null);
 
   // Add-friend search state (name suggestions feature)
   const [addFriendQuery, setAddFriendQuery] = useState("");
@@ -126,10 +189,14 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
     if (activeView !== "notifications") return;
     setNotifsLoading(true);
     api("/notifications")
-      .then(d => setNotifications(d.notifications ?? []))
+      .then(d => {
+        const list = d.notifications ?? [];
+        setNotifications(list);
+        setUnreadNotifCount(list.filter(n => !n.resolved).length);
+      })
       .catch(() => {})
       .finally(() => setNotifsLoading(false));
-  }, [activeView]);
+  }, [activeView]); // eslint-disable-line
 
   // ── Fetch tournaments when view activates ────────────────────────────────
   useEffect(() => {
@@ -173,11 +240,15 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
       const randomFriend = friendsList.length > 0
         ? friendsList[Math.floor(Math.random() * friendsList.length)]
         : { name: "PLAYER_01" };
+      const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8).toUpperCase();
+      const code = `LBY-${uuid}`;
+      setLobbyCode(code);
+      const ts = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
       setLobbyGame(selectedGame);
       setLobbyMembers(["You", randomFriend.name]);
       setLobbyMessages([
-        { sender: "System", text: `Match Found! ${randomFriend.name} has joined your lobby.`, time: "Just now" },
-        { sender: randomFriend.name, text: `Hey! Ready to play some ${selectedGame}?`, time: "Just now" },
+        { sender: "System", text: `Match Found! ${randomFriend.name} has joined your lobby.`, time: ts },
+        { sender: randomFriend.name, text: `Hey! Ready to play some ${selectedGame}?`, time: ts },
       ]);
       setIsInLobbyRoom(true);
       setMatchTimer(0);
@@ -211,8 +282,12 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
   const handleStartMatchmaking = () => { setMatchTimer(0); setIsMatching(true); };
   const handleCancelMatchmaking = () => { setIsMatching(false); setMatchTimer(0); };
 
+  const nowTime = () => new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+
   const handleCreateCustomLobby = () => {
-    const code = `LBY-${Math.floor(1000 + Math.random() * 9000)}`;
+    // Use crypto.randomUUID() for a secure, unique lobby code
+    const uuid = crypto.randomUUID().replace(/-/g, "").substring(0, 8).toUpperCase();
+    const code = `LBY-${uuid}`;
     setLobbyCode(code);
     const socketUrl = import.meta.env.VITE_API_URL
       ? import.meta.env.VITE_API_URL.replace("/api", "")
@@ -280,20 +355,20 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
     if (socketRef.current) {
       socketRef.current.emit("send-chat", { message: lobbyChatInput });
     } else {
-      setLobbyMessages(prev => [...prev, { sender: "You", text: lobbyChatInput, time: "Just now" }]);
+      setLobbyMessages(prev => [...prev, { sender: "You", text: lobbyChatInput, time: nowTime() }]);
     }
     setLobbyChatInput("");
   };
 
   const handleStartGameMatch = () => {
     if (socketRef.current) socketRef.current.emit("start-match");
-    else alert("Launching matchmaking game server! Good luck!");
+    else setToast("Launching matchmaking game server! Good luck!");
   };
 
   const handleCopyInviteLink = () => {
     const inviteUrl = `${window.location.origin}/join-lobby?code=${lobbyCode}`;
-    navigator.clipboard.writeText(inviteUrl);
-    alert("Invite link copied to clipboard!");
+    navigator.clipboard.writeText(inviteUrl).catch(() => {});
+    setToast("Invite link copied to clipboard!");
   };
 
   const handleSendFriendMessage = async (e) => {
@@ -319,9 +394,9 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
     if (invitedPlayerIds.includes(id)) return;
     setInvitedPlayerIds(prev => [...prev, id]);
     if (isInLobbyRoom) {
-      setLobbyMessages(prev => [...prev, { sender: "System", text: `Invitation sent to ${name}!`, time: "Just now" }]);
+      setLobbyMessages(prev => [...prev, { sender: "System", text: `Invitation sent to ${name}!`, time: nowTime() }]);
     } else {
-      alert(`Invitation sent to ${name}!`);
+      setToast(`Invitation sent to ${name}!`);
     }
   };
 
@@ -374,23 +449,59 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
         method: "PATCH",
         body: JSON.stringify({ action, detail }),
       });
-      setNotifications(prev => prev.map(n =>
-        n.id === id ? { ...n, resolved: true, statusText: detail } : n
-      ));
+      setNotifications(prev => {
+        const updated = prev.map(n =>
+          n.id === id ? { ...n, resolved: true, statusText: detail } : n
+        );
+        setUnreadNotifCount(updated.filter(n => !n.resolved).length);
+        return updated;
+      });
+
+      // If user accepted a lobby invite — join it via socket
+      if (action === "accept") {
+        const notif = notifications.find(n => n.id === id);
+        if (notif?.type === "lobby" && notif?.game) {
+          // Extract lobby code from the message if present (format: "... lobby CODE (GAME).")
+          const codeMatch = notif.message?.match(/lobby\s+(LBY-[A-Z0-9]+)/i);
+          if (codeMatch) {
+            const code = codeMatch[1].toUpperCase();
+            const socketUrl = import.meta.env.VITE_API_URL
+              ? import.meta.env.VITE_API_URL.replace("/api", "")
+              : "http://localhost:5001";
+            if (socketRef.current) { socketRef.current.disconnect(); socketRef.current = null; }
+            const socket = io(socketUrl, { transports: ["websocket"] });
+            socketRef.current = socket;
+            socket.emit("join-lobby", {
+              lobbyCode: code,
+              username: user?.username || "player",
+              rank: gameRanks[notif.game] || "Unranked",
+              game: notif.game,
+            });
+            setupSocketListeners(socket);
+            setLobbyCode(code);
+            setLobbyGame(notif.game);
+            setIsInLobbyRoom(true);
+            onViewChange("lobby");
+          }
+        }
+      }
     } catch (err) {
       console.error("resolve notification error:", err);
     }
   };
 
   const handleRegisterTournament = async (id, name) => {
+    // Optimistically mark as registered
+    setRegisteredTournaments(prev => [...prev, id]);
     try {
       await api(`/tournaments/${id}/register`, { method: "POST" });
-      setRegisteredTournaments(prev => [...prev, id]);
       setTournamentsList(prev => prev.map(t =>
         t.id === id ? { ...t, isRegistered: true } : t
       ));
     } catch (err) {
-      alert(err.message || "Could not register");
+      // Revert optimistic update on failure
+      setRegisteredTournaments(prev => prev.filter(tid => tid !== id));
+      setToast(err.message || "Could not register — please try again");
     }
   };
 
@@ -508,7 +619,7 @@ export default function CharacterStage({ activeView, onViewChange, theme }) {
             <div className={`px-5 py-4 border-b ${borderColor} ${isDark ? "bg-[#ffffff]/5" : "bg-[#0b0c0b]/5"} flex items-center justify-between`}>
               <h3 className={`font-['Orbitron'] text-xs font-black uppercase tracking-[2px] ${textColor}`}>Friends</h3>
               <span className={`text-[9px] font-bold uppercase tracking-widest ${textMuted}`}>
-                {friendsList.length} online
+                {friendsList.filter(f => f.status !== "Offline").length} online
               </span>
             </div>
 

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import { useArena } from "../../context/ArenaContext";
 
 function NavIcon({ type }) {
   switch (type) {
@@ -57,6 +58,7 @@ const NAV = [
 
 export default function SidebarLeft({ activeView, onViewChange, theme, onThemeToggle }) {
   const { user } = useAuth();
+  const { unreadNotifCount } = useArena();
   const navigate = useNavigate();
   const [isMicOn,       setIsMicOn]       = useState(true);
   const [isDeafenOn,    setIsDeafenOn]    = useState(false);
@@ -269,6 +271,8 @@ export default function SidebarLeft({ activeView, onViewChange, theme, onThemeTo
       <nav className="flex-1 overflow-y-auto px-4 py-4 space-y-0.5">
         {NAV.map((item) => {
           const isActive = activeView === item.view;
+          // Dynamically inject notification count badge
+          const badgeCount = item.view === "notifications" ? unreadNotifCount : 0;
           return (
             <button
               key={item.view}
@@ -301,12 +305,12 @@ export default function SidebarLeft({ activeView, onViewChange, theme, onThemeTo
               <span className="flex-1 font-['Rajdhani'] text-[12px] font-bold tracking-[2px] uppercase">
                 {item.label}
               </span>
-              {item.badge && (
+              {badgeCount > 0 && (
                 <span
                   className="font-['Orbitron'] text-[8px] font-black tracking-[0.5px] px-1.5 py-0.5"
                   style={{ border: "1px solid rgba(229,62,62,0.6)", color: "#e53e3e" }}
                 >
-                  {item.badge}
+                  {badgeCount > 9 ? "9+" : badgeCount}
                 </span>
               )}
             </button>

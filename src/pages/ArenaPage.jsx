@@ -43,42 +43,51 @@ function GameBackgroundSlideshow({ isDark }) {
 
 // ─── Arena-info modal (status panel) ────────────────────────────────────────
 
-function ArenaInfoModal({ onClose }) {
+function ArenaInfoModal({ onClose, isDark }) {
+  const bg     = isDark ? "#0d0e12" : "#cbd4cc";
+  const fg     = isDark ? "#e6e8eb" : "#0b0c0b";
+  const border = isDark ? "rgba(255,255,255,0.12)" : "rgba(11,12,11,0.2)";
+  const muted  = isDark ? "rgba(230,232,235,0.4)" : "rgba(11,12,11,0.35)";
+  const overlay= isDark ? "rgba(0,0,0,0.75)" : "rgba(11,12,11,0.55)";
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0b0c0b]/60 p-6">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6" style={{ background: overlay }}>
       <div
-        className="relative w-full max-w-[720px] border border-[#0b0c0b]/20 bg-[#cbd4cc]"
-        style={{ boxShadow: "0 24px 80px rgba(11,12,11,0.2)" }}
+        className="relative w-full max-w-[720px]"
+        style={{ border: `1px solid ${border}`, background: bg, boxShadow: "0 24px 80px rgba(11,12,11,0.3)" }}
       >
         {/* Corner ticks */}
-        <span className="absolute top-0 left-0 h-3 w-3 border-l border-t border-[#0b0c0b]/40" />
-        <span className="absolute top-0 right-0 h-3 w-3 border-r border-t border-[#0b0c0b]/40" />
-        <span className="absolute bottom-0 left-0 h-3 w-3 border-l border-b border-[#0b0c0b]/40" />
-        <span className="absolute bottom-0 right-0 h-3 w-3 border-r border-b border-[#0b0c0b]/40" />
+        <span className="absolute top-0 left-0 h-3 w-3" style={{ borderLeft: `1px solid ${border}`, borderTop: `1px solid ${border}` }} />
+        <span className="absolute top-0 right-0 h-3 w-3" style={{ borderRight: `1px solid ${border}`, borderTop: `1px solid ${border}` }} />
+        <span className="absolute bottom-0 left-0 h-3 w-3" style={{ borderLeft: `1px solid ${border}`, borderBottom: `1px solid ${border}` }} />
+        <span className="absolute bottom-0 right-0 h-3 w-3" style={{ borderRight: `1px solid ${border}`, borderBottom: `1px solid ${border}` }} />
 
         {/* Header */}
-        <div className="flex items-end justify-between border-b border-[#0b0c0b]/15 px-8 py-6">
+        <div className="flex items-end justify-between px-8 py-6" style={{ borderBottom: `1px solid ${border}` }}>
           <div>
             <p className="font-['Orbitron'] text-[10px] font-black tracking-[4px] text-[#e53e3e] uppercase">
               REAL-TIME STATUS
             </p>
-            <h2 className="mt-1 font-['Orbitron'] text-xl font-black tracking-[2px] text-[#0b0c0b] uppercase">
+            <h2 className="mt-1 font-['Orbitron'] text-xl font-black tracking-[2px] uppercase" style={{ color: fg }}>
               Arena Hub
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="font-['Rajdhani'] text-[11px] font-bold tracking-[2px] text-[#0b0c0b]/50 uppercase hover:text-[#0b0c0b] bg-transparent border-none cursor-pointer transition-colors"
+            className="font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase bg-transparent border-none cursor-pointer transition-colors"
+            style={{ color: muted }}
+            onMouseEnter={e => e.currentTarget.style.color = fg}
+            onMouseLeave={e => e.currentTarget.style.color = muted}
           >
             CLOSE <span className="text-[#e53e3e]">×</span>
           </button>
         </div>
 
         {/* Body */}
-        <div className="grid md:grid-cols-2 gap-px bg-[#0b0c0b]/10 m-px">
+        <div className="grid md:grid-cols-2 gap-px m-px" style={{ background: border }}>
           {/* System stats */}
-          <div className="bg-[#cbd4cc] px-8 py-6">
-            <p className="font-['Orbitron'] text-[9px] font-black tracking-[3px] text-[#0b0c0b]/35 uppercase mb-4">
+          <div className="px-8 py-6" style={{ background: bg }}>
+            <p className="font-['Orbitron'] text-[9px] font-black tracking-[3px] uppercase mb-4" style={{ color: muted }}>
               SYSTEM OVERVIEW
             </p>
             {[
@@ -89,28 +98,28 @@ function ArenaInfoModal({ onClose }) {
             ].map((row) => (
               <div
                 key={row.label}
-                className="flex items-center justify-between border-b border-dashed border-[#0b0c0b]/10 py-3 last:border-0"
+                className="flex items-center justify-between py-3 last:border-0"
+                style={{ borderBottom: `1px dashed ${border}` }}
               >
-                <span className="font-['Rajdhani'] text-[11px] font-bold tracking-[1px] text-[#0b0c0b]/50 uppercase">
+                <span className="font-['Rajdhani'] text-[11px] font-bold tracking-[1px] uppercase" style={{ color: muted }}>
                   {row.label}
                 </span>
                 <span
-                  className={`font-['Orbitron'] text-[13px] font-black ${row.accent ? "text-[#e53e3e]" : "text-[#0b0c0b]"}`}
-                  style={row.accent ? { textShadow: "0 0 10px rgba(229,62,62,0.35)" } : {}}
+                  className="font-['Orbitron'] text-[13px] font-black"
+                  style={{ color: row.accent ? "#e53e3e" : fg, textShadow: row.accent ? "0 0 10px rgba(229,62,62,0.35)" : "none" }}
                 >
                   {row.value}
                 </span>
               </div>
             ))}
-            {/* scan bar */}
-            <div className="mt-4 relative h-px w-full overflow-hidden bg-[#0b0c0b]/15">
+            <div className="mt-4 relative h-px w-full overflow-hidden" style={{ background: border }}>
               <div className="absolute top-0 h-full w-full bg-[#e53e3e]" style={{ animation: "searchScan 2.5s infinite linear", left: "-100%" }} />
             </div>
           </div>
 
           {/* Regional leaderboard */}
-          <div className="bg-[#cbd4cc] px-8 py-6">
-            <p className="font-['Orbitron'] text-[9px] font-black tracking-[3px] text-[#0b0c0b]/35 uppercase mb-4">
+          <div className="px-8 py-6" style={{ background: bg }}>
+            <p className="font-['Orbitron'] text-[9px] font-black tracking-[3px] uppercase mb-4" style={{ color: muted }}>
               TOP PLAYERS
             </p>
             {[
@@ -120,11 +129,12 @@ function ArenaInfoModal({ onClose }) {
             ].map((p) => (
               <div
                 key={p.rank}
-                className="flex items-center justify-between border-b border-dashed border-[#0b0c0b]/10 py-3 last:border-0"
+                className="flex items-center justify-between py-3 last:border-0"
+                style={{ borderBottom: `1px dashed ${border}` }}
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-['Orbitron'] text-[9px] font-black text-[#0b0c0b]/30">{p.rank}</span>
-                  <span className="font-['Orbitron'] text-[11px] font-black tracking-[1px] text-[#0b0c0b]">{p.name}</span>
+                  <span className="font-['Orbitron'] text-[9px] font-black" style={{ color: muted }}>{p.rank}</span>
+                  <span className="font-['Orbitron'] text-[11px] font-black tracking-[1px]" style={{ color: fg }}>{p.name}</span>
                 </div>
                 <span className="font-['Share_Tech_Mono'] text-[11px] text-[#e53e3e]">{p.mmr}</span>
               </div>
@@ -138,28 +148,37 @@ function ArenaInfoModal({ onClose }) {
 
 // ─── Leaderboard modal ───────────────────────────────────────────────────────
 
-function LeaderboardModal({ onClose }) {
-  return (
-    <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto bg-[#0b0c0b]/60 p-8">
-      <div
-        className="relative w-full max-w-[900px] border border-[#0b0c0b]/20 bg-[#cbd4cc]"
-        style={{ boxShadow: "0 24px 80px rgba(11,12,11,0.2)" }}
-      >
-        <span className="absolute top-0 left-0 h-3 w-3 border-l border-t border-[#0b0c0b]/40" />
-        <span className="absolute top-0 right-0 h-3 w-3 border-r border-t border-[#0b0c0b]/40" />
+function LeaderboardModal({ onClose, isDark }) {
+  const bg     = isDark ? "#0d0e12" : "#cbd4cc";
+  const fg     = isDark ? "#e6e8eb" : "#0b0c0b";
+  const border = isDark ? "rgba(255,255,255,0.12)" : "rgba(11,12,11,0.2)";
+  const muted  = isDark ? "rgba(230,232,235,0.4)" : "rgba(11,12,11,0.35)";
+  const overlay= isDark ? "rgba(0,0,0,0.75)" : "rgba(11,12,11,0.55)";
 
-        <div className="flex items-end justify-between border-b border-[#0b0c0b]/15 px-8 py-6">
+  return (
+    <div className="fixed inset-0 z-[60] flex items-start justify-center overflow-y-auto p-8" style={{ background: overlay }}>
+      <div
+        className="relative w-full max-w-[900px]"
+        style={{ border: `1px solid ${border}`, background: bg, boxShadow: "0 24px 80px rgba(11,12,11,0.3)" }}
+      >
+        <span className="absolute top-0 left-0 h-3 w-3" style={{ borderLeft: `1px solid ${border}`, borderTop: `1px solid ${border}` }} />
+        <span className="absolute top-0 right-0 h-3 w-3" style={{ borderRight: `1px solid ${border}`, borderTop: `1px solid ${border}` }} />
+
+        <div className="flex items-end justify-between px-8 py-6" style={{ borderBottom: `1px solid ${border}` }}>
           <div>
             <p className="font-['Orbitron'] text-[10px] font-black tracking-[4px] text-[#e53e3e] uppercase">
               RANKED
             </p>
-            <h2 className="mt-1 font-['Orbitron'] text-xl font-black tracking-[2px] text-[#0b0c0b] uppercase">
+            <h2 className="mt-1 font-['Orbitron'] text-xl font-black tracking-[2px] uppercase" style={{ color: fg }}>
               Leaderboard
             </h2>
           </div>
           <button
             onClick={onClose}
-            className="font-['Rajdhani'] text-[11px] font-bold tracking-[2px] text-[#0b0c0b]/50 uppercase hover:text-[#0b0c0b] bg-transparent border-none cursor-pointer transition-colors"
+            className="font-['Rajdhani'] text-[11px] font-bold tracking-[2px] uppercase bg-transparent border-none cursor-pointer transition-colors"
+            style={{ color: muted }}
+            onMouseEnter={e => e.currentTarget.style.color = fg}
+            onMouseLeave={e => e.currentTarget.style.color = muted}
           >
             CLOSE <span className="text-[#e53e3e]">×</span>
           </button>
@@ -220,7 +239,10 @@ export default function ArenaPage() {
 
         {/* Header */}
         <div style={{ gridArea: "header" }}>
-          <ArenaHeader onInfoClick={() => setShowArenaInfo(true)} />
+          <ArenaHeader
+            onInfoClick={() => setShowArenaInfo(true)}
+            onLeaderboardClick={() => setShowLeaderboard(true)}
+          />
         </div>
 
         {/* Main content */}
@@ -235,7 +257,10 @@ export default function ArenaPage() {
           className="sticky top-0 z-30 border-b px-5 pt-5 pb-4"
           style={{ background: bg, borderColor: `${fg}22` }}
         >
-          <ArenaHeader onInfoClick={() => setShowArenaInfo(true)} />
+          <ArenaHeader
+            onInfoClick={() => setShowArenaInfo(true)}
+            onLeaderboardClick={() => setShowLeaderboard(true)}
+          />
         </div>
 
         {/* Matchup bar */}
@@ -298,8 +323,8 @@ export default function ArenaPage() {
       </div>
 
       {/* ── Modals ───────────────────────────────────── */}
-      {showArenaInfo   && <ArenaInfoModal   onClose={() => setShowArenaInfo(false)}   />}
-      {showLeaderboard && <LeaderboardModal onClose={() => setShowLeaderboard(false)} />}
+      {showArenaInfo   && <ArenaInfoModal   onClose={() => setShowArenaInfo(false)}   isDark={isDark} />}
+      {showLeaderboard && <LeaderboardModal onClose={() => setShowLeaderboard(false)} isDark={isDark} />}
     </div>
   );
 }

@@ -52,7 +52,7 @@ function UserDropdown({ username, onProfile, onLogout }) {
   );
 }
 
-export default function ArenaHeader({ onInfoClick }) {
+export default function ArenaHeader({ onInfoClick, onLeaderboardClick }) {
   const [menuOpen, setMenuOpen]  = useState(false);
   const { isLoggedIn, user, logout } = useAuth();
   const navigate = useNavigate();
@@ -109,6 +109,16 @@ export default function ArenaHeader({ onInfoClick }) {
               className="font-['Rajdhani'] text-[12px] font-bold tracking-[3px] text-[#0b0c0b]/40 uppercase hover:text-[#0b0c0b] transition-colors bg-transparent border-none cursor-pointer"
             >
               STATUS <span className="text-[#e53e3e] text-[10px]">+</span>
+            </button>
+          )}
+
+          {/* Leaderboard button */}
+          {onLeaderboardClick && (
+            <button
+              onClick={onLeaderboardClick}
+              className="font-['Rajdhani'] text-[12px] font-bold tracking-[3px] text-[#0b0c0b]/40 uppercase hover:text-[#0b0c0b] transition-colors bg-transparent border-none cursor-pointer"
+            >
+              LEADERBOARD <span className="text-[#e53e3e] text-[10px]">+</span>
             </button>
           )}
         </nav>

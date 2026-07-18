@@ -6,6 +6,7 @@ import SignupPage  from "./pages/SignupPage";
 import ArenaPage   from "./pages/ArenaPage";
 import ProfilePage from "./pages/ProfilePage";
 import GamesPage from "./pages/GamesPage";
+import CustomCursor from "./components/arena/CustomCursor";
 
 /** Redirects unauthenticated users to /login */
 function ProtectedRoute({ children }) {
@@ -26,6 +27,7 @@ function GuestRoute({ children }) {
 export default function App() {
   return (
     <BrowserRouter>
+      <CustomCursor />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/games" element={<GamesPage />} />
