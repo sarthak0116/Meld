@@ -8,10 +8,16 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const handleLogoutEvent = () => {
+      localStorage.removeItem('meld_token');
+      setUser(null);
+    };
+    window.addEventListener('auth:logout', handleLogoutEvent);
+
     const token = localStorage.getItem('meld_token');
     if (!token) {
       setLoading(false);
-      return;
+      return () => window.removeEventListener('auth:logout', handleLogoutEvent);
     }
     api('/auth/me')
       .then((data) => setUser(data.user))
@@ -20,6 +26,8 @@ export function AuthProvider({ children }) {
         setUser(null);
       })
       .finally(() => setLoading(false));
+
+    return () => window.removeEventListener('auth:logout', handleLogoutEvent);
   }, []);
 
   const login = async (email, password) => {

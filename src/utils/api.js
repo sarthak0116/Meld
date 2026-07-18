@@ -19,7 +19,27 @@ export async function api(endpoint, options = {}) {
     throw new Error('Cannot reach server. Check your connection.');
   }
 
-  const data = await response.json();
+  // B14 fix: safely parse JSON — non-JSON error bodies (e.g., HTML 502) would
+  // otherwise throw an unhandled parse error.
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    if (response.status === 401) {
+      window.dispatchEvent(new Event('auth:logout'));
+      throw new Error('Session expired');
+    }
+    if (!response.ok) {
+      throw new Error(`Server error (${response.status})`);
+    }
+    return {};
+  }
+
+  if (response.status === 401) {
+    window.dispatchEvent(new Event('auth:logout'));
+    throw new Error('Session expired');
+  }
+
 
   if (!response.ok) {
     throw new Error(data.message || 'Something went wrong');

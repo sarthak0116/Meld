@@ -50,7 +50,7 @@ function NavIcon({ type }) {
 const NAV = [
   { label: "LOBBY",         icon: "lobby",   view: "lobby" },
   { label: "TOURNAMENTS",   icon: "party",   view: "tournaments" },
-  { label: "FRIENDS",       icon: "friends", view: "friends", badge: "7" },
+  { label: "FRIENDS",       icon: "friends", view: "friends" },
   { label: "NOTIFICATIONS", icon: "bell",    view: "notifications" },
   { label: "PLAYER STATS",  icon: "rank",    view: "stats" },
 ];

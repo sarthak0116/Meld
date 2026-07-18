@@ -74,6 +74,17 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // Per-game stats — one entry per game title
+  gameStats: [{
+    game:    { type: String, required: true },
+    rank:    { type: String, default: 'Unranked' },
+    mmr:     { type: Number, default: 1000 },
+    wins:    { type: Number, default: 0 },
+    losses:  { type: Number, default: 0 },
+    kda:     { type: Number, default: 0 },
+    // Last 5 match results stored as 'W' or 'L'
+    recentHistory: { type: [String], default: [] },
+  }],
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

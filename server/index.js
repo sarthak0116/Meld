@@ -62,10 +62,18 @@ app.use('/api/', generalLimiter);
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const leaderboardRoutes = require('./routes/leaderboard');
+const friendsRoutes = require('./routes/friends');
+const notificationsRoutes = require('./routes/notifications');
+const tournamentsRoutes = require('./routes/tournaments');
+const statsRoutes = require('./routes/stats');
 
 app.use('/api/auth', authLimiter, authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/leaderboard', leaderboardRoutes);
+app.use('/api/friends', friendsRoutes);
+app.use('/api/notifications', notificationsRoutes);
+app.use('/api/tournaments', tournamentsRoutes);
+app.use('/api/stats', statsRoutes);
 
 // Health check
 app.get('/', (_req, res) => {
@@ -195,8 +203,8 @@ io.on('connection', (socket) => {
       return;
     }
 
-    // Generate dynamic Valorant server connection link
-    const matchId = Math.random().toString(36).substring(2, 8).toUpperCase();
+    // Generate a cryptographically secure match ID (fixes B5 — no more Math.random())
+    const matchId = require('crypto').randomUUID().replace(/-/g, '').substring(0, 8).toUpperCase();
     const serverLink = `https://riot-valorant.meld-play.net/match/match-id-${matchId}`;
 
     io.to(currentLobbyCode).emit('match-started', {
